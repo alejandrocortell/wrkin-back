@@ -1,0 +1,23 @@
+{
+    "name": "wrkin-back",
+    "version": "1.0.0",
+    "description": "APIREST for application WRKIN",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon app/app.ts",
+        "prod": "tsc",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Alejandro Cortell Marín",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/express": "^4.17.13",
+        "@types/node": "^16.11.7",
+        "nodemon": "^2.0.15",
+        "ts-node": "^10.4.0",
+        "typescript": "^4.4.4"
+    },
+    "dependencies": {
+        "express": "^4.17.1"
+    }
+}

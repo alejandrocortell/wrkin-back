@@ -41,10 +41,6 @@ let models = [
 ]
 models.forEach((model) => model.initialize(sequelize))
 
-User.belongsTo(Role)
-User.belongsTo(User)
-Organization.hasMany(User)
-
 Configuration.belongsTo(Organization)
 
 PunchIn.belongsTo(User)
@@ -57,9 +53,15 @@ RequestDayOff.belongsTo(DayOffType)
 RequestDayOff.belongsTo(User)
 RequestDayOff.belongsTo(StatusRequest)
 
+User.belongsTo(Role)
+User.belongsTo(User, { as: 'Manager' })
+
+User.belongsToMany(Organization, { through: 'User_Organization' })
+Organization.belongsToMany(User, { through: 'User_Organization' })
+
 // Create database tables
 // alter: true update the database (if is necessary) wiht the actual model
-sequelize.sync({ alter: true })
+sequelize.sync({ force: true })
 
 export {
     sequelize as Database,

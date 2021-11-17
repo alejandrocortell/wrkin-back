@@ -19,4 +19,7 @@ package-lock.json
 *.gz
 
 # Build
-build/
+dist/
+
+# Environment
+.env

@@ -61,7 +61,7 @@ Organization.belongsToMany(User, { through: 'User_Organization' })
 
 // Create database tables
 // alter: true update the database (if is necessary) wiht the actual model
-sequelize.sync({ force: true })
+sequelize.sync({ alter: true })
 
 export {
     sequelize as Database,

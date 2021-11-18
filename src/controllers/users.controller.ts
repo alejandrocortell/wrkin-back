@@ -1,0 +1,69 @@
+import { User } from '../database/models'
+
+async function getUsers(): Promise<any[]> {
+    return await User.findAll({
+        order: [['id', 'ASC']],
+    })
+}
+
+async function createUser(
+    firstName: string,
+    lastName: string,
+    birthday: string,
+    address: string,
+    hoursToWork: number
+): Promise<number> {
+    let user = await User.create({
+        firstName: firstName,
+        lastName: lastName,
+        birthday: birthday,
+        address: address,
+        hoursToWork: hoursToWork,
+    })
+
+    return user.id
+}
+
+async function getUser(id: number): Promise<any> {
+    let user = await User.findByPk(id)
+    if (!user) throw Error('404')
+
+    return user
+}
+
+async function updateUser(
+    id: number,
+    firstName: string | undefined,
+    lastName: string | undefined,
+    birthday: string | undefined,
+    address: string | undefined,
+    hoursToWork: number | undefined
+): Promise<void> {
+    let user = await User.findByPk(id)
+    if (!user) throw Error('404')
+
+    const userUpdated = {
+        firstName: firstName !== undefined ? firstName : user.firstName,
+        lastName: lastName !== undefined ? lastName : user.lastName,
+        birthday: birthday !== undefined ? birthday : user.birthday,
+        address: address !== undefined ? address : user.address,
+        hoursToWork: hoursToWork !== undefined ? hoursToWork : user.hoursToWork,
+    }
+
+    await user.update(userUpdated)
+}
+
+async function deleteUser(id: number): Promise<void> {
+    let user = await User.findByPk(id)
+    if (!user) throw Error('404')
+
+    await user.destroy()
+}
+
+export default {
+    getUsers,
+    createUser,
+    getUser,
+    updateUser,
+    deleteUser,
+}

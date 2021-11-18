@@ -19,7 +19,7 @@ import {
 } from 'sequelize'
 
 class DocumentType extends Model {
-    public documentType!: string
+    public name!: string
 
     // Auto-generated
     public id!: number
@@ -29,7 +29,7 @@ class DocumentType extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                documentType: DataTypes.STRING,
+                name: DataTypes.STRING,
             },
             {
                 sequelize: sequelize,

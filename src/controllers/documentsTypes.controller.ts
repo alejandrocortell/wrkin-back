@@ -13,8 +13,7 @@ async function createDocumentType(name: string): Promise<number> {
 }
 
 async function getDocumentType(id: number): Promise<any> {
-    let documentType = await DocumentType.findByPk(id, {})
-
+    let documentType = await DocumentType.findByPk(id)
     if (!documentType) throw Error('404')
 
     return documentType

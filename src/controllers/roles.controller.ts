@@ -13,8 +13,7 @@ async function createRole(name: string): Promise<number> {
 }
 
 async function getRole(id: number): Promise<any> {
-    let role = await Role.findByPk(id, {})
-
+    let role = await Role.findByPk(id)
     if (!role) throw Error('404')
 
     return role

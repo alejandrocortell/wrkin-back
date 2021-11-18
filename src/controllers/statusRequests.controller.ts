@@ -13,8 +13,7 @@ async function createStatusRequest(name: string): Promise<number> {
 }
 
 async function getStatusRequest(id: number): Promise<any> {
-    let statusRequest = await StatusRequest.findByPk(id, {})
-
+    let statusRequest = await StatusRequest.findByPk(id)
     if (!statusRequest) throw Error('404')
 
     return statusRequest

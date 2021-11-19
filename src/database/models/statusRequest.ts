@@ -29,7 +29,7 @@ class StatusRequest extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                documentType: DataTypes.STRING,
+                statusRequest: DataTypes.STRING,
             },
             {
                 sequelize: sequelize,

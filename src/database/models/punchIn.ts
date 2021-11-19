@@ -30,10 +30,10 @@ class PunchIn extends Model {
     public updatedAt!: Date
 
     // Populated for inclusions
-    public readonly Users?: User
+    public readonly User: User
 
     public static associations: {
-        Users: Association<PunchIn, User>
+        User: Association<PunchIn, User>
     }
 
     public static initialize(sequelize: Sequelize) {

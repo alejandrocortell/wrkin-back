@@ -33,9 +33,9 @@ class RequestDayOff extends Model {
     public updatedAt!: Date
 
     // Populated for inclusions
-    public readonly Users?: User[]
-    public readonly DaysOffTypes?: DayOffType[]
-    public readonly StatusRequest?: StatusRequest[]
+    public readonly Users: User[]
+    public readonly DaysOffTypes: DayOffType[]
+    public readonly StatusRequest: StatusRequest[]
 
     public static associations: {
         Users: Association<RequestDayOff, User>

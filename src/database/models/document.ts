@@ -35,12 +35,12 @@ class Document extends Model {
     // Populated for inclusions
     public readonly Organization: Organization[]
     public readonly User?: User[]
-    public readonly DocumentsType: DocumentType[]
+    public readonly DocumentType: DocumentType[]
 
     public static associations: {
         Organization: Association<Document, Organization>
         User: Association<Document, User>
-        DocumentsType: Association<Document, DocumentType>
+        DocumentType: Association<Document, DocumentType>
     }
 
     public static initialize(sequelize: Sequelize) {

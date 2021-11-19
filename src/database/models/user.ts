@@ -26,6 +26,8 @@ class User extends Model {
     public lastName!: string
     public birthday!: Date
     public address!: string
+    public zipcode!: string
+    public city!: string
     public hoursToWork!: number
 
     // Auto-generated
@@ -51,6 +53,8 @@ class User extends Model {
                 lastName: DataTypes.STRING,
                 birthday: DataTypes.DATE,
                 address: DataTypes.STRING,
+                zipcode: DataTypes.STRING,
+                city: DataTypes.STRING,
                 hoursToWork: DataTypes.INTEGER,
             },
             {

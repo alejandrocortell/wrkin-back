@@ -18,6 +18,8 @@ router
                 req.body.lastName,
                 req.body.birthday,
                 req.body.address,
+                req.body.zipcode,
+                req.body.city,
                 req.body.hoursToWork
             )
             .then((id) =>
@@ -46,6 +48,8 @@ router
                 req.body.lastName ? req.body.lastName : undefined,
                 req.body.birthday ? req.body.birthday : undefined,
                 req.body.address ? req.body.address : undefined,
+                req.body.zipcode ? req.body.zipcode : undefined,
+                req.body.city ? req.body.city : undefined,
                 req.body.hoursToWork ? req.body.hoursToWork : undefined
             )
             .then(() => res.status(201).send())

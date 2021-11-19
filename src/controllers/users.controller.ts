@@ -11,6 +11,8 @@ async function createUser(
     lastName: string,
     birthday: string,
     address: string,
+    zipcode: string,
+    city: string,
     hoursToWork: number
 ): Promise<number> {
     let user = await User.create({
@@ -18,6 +20,8 @@ async function createUser(
         lastName: lastName,
         birthday: birthday,
         address: address,
+        zipcode: zipcode,
+        city: city,
         hoursToWork: hoursToWork,
     })
 
@@ -37,6 +41,8 @@ async function updateUser(
     lastName: string | undefined,
     birthday: string | undefined,
     address: string | undefined,
+    zipcode: string | undefined,
+    city: string | undefined,
     hoursToWork: number | undefined
 ): Promise<void> {
     let user = await User.findByPk(id)
@@ -47,6 +53,8 @@ async function updateUser(
         lastName: lastName !== undefined ? lastName : user.lastName,
         birthday: birthday !== undefined ? birthday : user.birthday,
         address: address !== undefined ? address : user.address,
+        zipcode: zipcode !== undefined ? zipcode : user.zipcode,
+        city: city !== undefined ? city : user.city,
         hoursToWork: hoursToWork !== undefined ? hoursToWork : user.hoursToWork,
     }
 

@@ -31,10 +31,10 @@ class Settings extends Model {
     public updatedAt!: Date
 
     // Populated for inclusions
-    public readonly Organization: Organization[]
+    public readonly organization: Organization[]
 
     public static associations: {
-        Organization: Association<Settings, Organization>
+        organization: Association<Settings, Organization>
     }
 
     public static initialize(sequelize: Sequelize) {

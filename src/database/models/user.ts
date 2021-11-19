@@ -36,14 +36,14 @@ class User extends Model {
     public updatedAt!: Date
 
     // Populated for inclusions
-    public readonly Organization: Organization[]
-    public readonly Role: Role
-    public readonly Manager: User
+    public readonly organization: Organization[]
+    public readonly role: Role
+    public readonly manager: User
 
     public static associations: {
-        Organization: Association<User, Organization>
-        Role: Association<User, Role>
-        Manager: Association<User, User>
+        organization: Association<User, Organization>
+        role: Association<User, Role>
+        manager: Association<User, User>
     }
 
     public static initialize(sequelize: Sequelize) {

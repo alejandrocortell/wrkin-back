@@ -18,9 +18,9 @@ async function createDocument(
         name: name,
         nameServer: nameServer,
         path: path,
-        Organization: organization,
-        User: user,
-        DocumentType: documentType,
+        organization: organization,
+        user: user,
+        documentType: documentType,
     })
 
     return document.id
@@ -49,9 +49,9 @@ async function updateDocument(
         name: name !== undefined ? name : document.name,
         nameServer: nameServer !== undefined ? nameServer : document.nameServer,
         path: path !== undefined ? path : document.path,
-        Organization: organization !== undefined ? organization : document.Organization,
-        User: user !== undefined ? user : document.User,
-        DocumentType: documentType !== undefined ? documentType : document.DocumentType,
+        organization: organization !== undefined ? organization : document.organization,
+        user: user !== undefined ? user : document.user,
+        documentType: documentType !== undefined ? documentType : document.documentType,
     }
 
     await document.update(userUpdated)

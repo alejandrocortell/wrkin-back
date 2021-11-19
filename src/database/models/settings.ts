@@ -20,7 +20,7 @@ import {
 
 import Organization from './organization'
 
-class Configuration extends Model {
+class Settings extends Model {
     public marginHours!: number
     public allowModifyPunchIn!: boolean
     public allowInsertPastPunchIn!: boolean
@@ -34,7 +34,7 @@ class Configuration extends Model {
     public readonly Organization: Organization[]
 
     public static associations: {
-        Organization: Association<Configuration, Organization>
+        Organization: Association<Settings, Organization>
     }
 
     public static initialize(sequelize: Sequelize) {
@@ -47,12 +47,12 @@ class Configuration extends Model {
             {
                 sequelize: sequelize,
                 name: {
-                    singular: 'Configuration',
-                    plural: 'Configurations',
+                    singular: 'Settings',
+                    plural: 'Settings',
                 },
             }
         )
     }
 }
 
-export default Configuration
+export default Settings

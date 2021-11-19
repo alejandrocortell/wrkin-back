@@ -1,6 +1,6 @@
 import { Options, Sequelize } from 'sequelize'
 
-import Configuration from './configuration'
+import Settings from './settings'
 import DayOffType from './dayOffType'
 import Document from './document'
 import DocumentType from './documentType'
@@ -28,7 +28,7 @@ const sequelize = new Sequelize(dbConfig.database as string, dbConfig.username a
 // Initialize each model in the database
 // This must be done before associations are made
 let models = [
-    Configuration,
+    Settings,
     DayOffType,
     Document,
     DocumentType,
@@ -41,7 +41,7 @@ let models = [
 ]
 models.forEach((model) => model.initialize(sequelize))
 
-Configuration.belongsTo(Organization)
+Settings.belongsTo(Organization)
 
 PunchIn.belongsTo(User)
 
@@ -65,7 +65,7 @@ sequelize.sync({ force: true })
 
 export {
     sequelize as Database,
-    Configuration,
+    Settings,
     DayOffType,
     Document,
     DocumentType,

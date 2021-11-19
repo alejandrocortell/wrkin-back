@@ -10,5 +10,6 @@ router.use('/users', usersRoutes)
 router.use('/documents-types', documentsTypesRoutes)
 router.use('/status-requests', statusRequesRoutes)
 router.use('/roles', rolesRoutes)
+router.use('/settings', rolesRoutes)
 
 export default router

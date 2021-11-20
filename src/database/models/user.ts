@@ -40,6 +40,15 @@ class User extends Model {
     public readonly role: Role
     public readonly manager: User
 
+    public addOrganization!: BelongsToManyAddAssociationMixin<Organization, number>
+    public addOrganizations!: BelongsToManyAddAssociationsMixin<Organization, number>
+    public getOrganizations!: BelongsToManyGetAssociationsMixin<Organization>
+    public hasOrganization!: BelongsToManyHasAssociationMixin<Organization, number>
+    public hasOrganizations!: BelongsToManyHasAssociationsMixin<Organization, number>
+    public removeOrganization!: BelongsToManyRemoveAssociationMixin<Organization, number>
+    public removeOrganizations!: BelongsToManyRemoveAssociationsMixin<Organization, number>
+    public setOrganizations!: BelongsToManySetAssociationsMixin<Organization, number>
+
     public static associations: {
         organization: Association<User, Organization>
         role: Association<User, Role>

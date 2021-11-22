@@ -1,4 +1,4 @@
-import { User } from '../database/models'
+import { PunchIn, User } from '../database/models'
 
 async function getUsers(): Promise<any[]> {
     return await User.findAll({
@@ -68,10 +68,24 @@ async function deleteUser(id: number): Promise<void> {
     await user.destroy()
 }
 
+async function getPunchIns(id: number): Promise<PunchIn[]> {
+    return await PunchIn.findAll({
+        include: [
+            {
+                model: User,
+                where: { id: id },
+                required: true,
+                attributes: [],
+            },
+        ],
+    })
+}
+
 export default {
     getUsers,
     createUser,
     getUser,
     updateUser,
     deleteUser,
+    getPunchIns,
 }

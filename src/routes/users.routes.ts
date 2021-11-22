@@ -64,4 +64,16 @@ router
             .finally(next)
     })
 
+router.route('/:id(\\d+)/punchins').get((req, res, next) => {
+    console.log('---------------')
+    controller
+        .getPunchIns(parseInt(req.params.id))
+        .then((punchIns) => {
+            console.log(punchIns)
+            res.status(200).send(punchIns)
+        })
+        .catch(() => res.status(404).send())
+        .finally(next)
+})
+
 export default router

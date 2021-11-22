@@ -65,12 +65,30 @@ router
     })
 
 router.route('/:id(\\d+)/punchins').get((req, res, next) => {
-    console.log('---------------')
     controller
         .getPunchIns(parseInt(req.params.id))
         .then((punchIns) => {
-            console.log(punchIns)
             res.status(200).send(punchIns)
+        })
+        .catch(() => res.status(404).send())
+        .finally(next)
+})
+
+router.route('/:id(\\d+)/daysoff').get((req, res, next) => {
+    controller
+        .getDaysOff(parseInt(req.params.id))
+        .then((daysOff) => {
+            res.status(200).send(daysOff)
+        })
+        .catch(() => res.status(404).send())
+        .finally(next)
+})
+
+router.route('/:id(\\d+)/documents').get((req, res, next) => {
+    controller
+        .getDocuments(parseInt(req.params.id))
+        .then((documents) => {
+            res.status(200).send(documents)
         })
         .catch(() => res.status(404).send())
         .finally(next)

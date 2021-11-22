@@ -1,4 +1,4 @@
-import { PunchIn, User } from '../database/models'
+import { PunchIn, RequestDayOff, User, Document } from '../database/models'
 
 async function getUsers(): Promise<any[]> {
     return await User.findAll({
@@ -81,6 +81,32 @@ async function getPunchIns(id: number): Promise<PunchIn[]> {
     })
 }
 
+async function getDaysOff(id: number): Promise<RequestDayOff[]> {
+    return await RequestDayOff.findAll({
+        include: [
+            {
+                model: User,
+                where: { id: id },
+                required: true,
+                attributes: [],
+            },
+        ],
+    })
+}
+
+async function getDocuments(id: number): Promise<Document[]> {
+    return await Document.findAll({
+        include: [
+            {
+                model: User,
+                where: { id: id },
+                required: true,
+                attributes: [],
+            },
+        ],
+    })
+}
+
 export default {
     getUsers,
     createUser,
@@ -88,4 +114,6 @@ export default {
     updateUser,
     deleteUser,
     getPunchIns,
+    getDaysOff,
+    getDocuments,
 }

@@ -1,5 +1,4 @@
 const faker = require('faker')
-import { reject } from 'bluebird'
 import {
     Database,
     DayOffType,
@@ -13,6 +12,7 @@ import {
     User,
 } from '../database/models'
 import { generateBirthday, generatePunchIn, randomNumber } from './../utils/utils'
+import { encode, decode } from './../utils/cryptoJS'
 
 async function destroyData(): Promise<any> {
     const tables = Database.getQueryInterface()
@@ -107,6 +107,8 @@ async function users(): Promise<any[]> {
         index === 2 && (roleId = 4)
 
         usersData.push({
+            user: faker.internet.userName(),
+            password: encode(faker.internet.password()),
             RoleId: roleId,
             ManagerId: roleId - 1,
             firstName: faker.name.firstName(),

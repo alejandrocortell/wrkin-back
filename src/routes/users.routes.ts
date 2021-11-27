@@ -14,6 +14,8 @@ router
     .post(auth, (req, res, next) => {
         controller
             .createUser(
+                req.body.user,
+                req.body.password,
                 req.body.firstName,
                 req.body.lastName,
                 req.body.birthday,
@@ -44,6 +46,8 @@ router
         controller
             .updateUser(
                 parseInt(req.params.id),
+                req.body.user ? req.body.user : undefined,
+                req.body.password ? req.body.password : undefined,
                 req.body.firstName ? req.body.firstName : undefined,
                 req.body.lastName ? req.body.lastName : undefined,
                 req.body.birthday ? req.body.birthday : undefined,

@@ -1,5 +1,6 @@
 require('dotenv').config()
 
 module.exports = {
-    key: process.env.SECRET_KEY,
+    keyJWT: process.env.SECRET_KEY_TOKENS,
+    keyPass: process.env.SECRET_KEY_PASSWORDS,
 }

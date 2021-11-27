@@ -7,7 +7,7 @@ import router from './src/routes'
 
 const server = express()
 
-server.set('key', config.key)
+server.set('key', config.keyJWT)
 server.use(bodyparser.urlencoded({ extended: true }))
 server.use(bodyparser.json())
 server.use(router)

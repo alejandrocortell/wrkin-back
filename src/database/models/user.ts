@@ -22,6 +22,8 @@ import Organization from './organization'
 import Role from './role'
 
 class User extends Model {
+    public user!: string
+    public password!: string
     public firstName!: string
     public lastName!: string
     public birthday!: Date
@@ -58,6 +60,8 @@ class User extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
+                user: DataTypes.STRING,
+                password: DataTypes.STRING,
                 firstName: DataTypes.STRING,
                 lastName: DataTypes.STRING,
                 birthday: DataTypes.DATE,

@@ -7,6 +7,8 @@ async function getUsers(): Promise<any[]> {
 }
 
 async function createUser(
+    user: string,
+    password: string,
     firstName: string,
     lastName: string,
     birthday: string,
@@ -15,7 +17,9 @@ async function createUser(
     city: string,
     hoursToWork: number
 ): Promise<number> {
-    let user = await User.create({
+    let newUser = await User.create({
+        user: user,
+        password: password,
         firstName: firstName,
         lastName: lastName,
         birthday: birthday,
@@ -25,7 +29,7 @@ async function createUser(
         hoursToWork: hoursToWork,
     })
 
-    return user.id
+    return newUser.id
 }
 
 async function getUser(id: number): Promise<any> {
@@ -37,6 +41,8 @@ async function getUser(id: number): Promise<any> {
 
 async function updateUser(
     id: number,
+    user: string | undefined,
+    password: string | undefined,
     firstName: string | undefined,
     lastName: string | undefined,
     birthday: string | undefined,
@@ -45,20 +51,22 @@ async function updateUser(
     city: string | undefined,
     hoursToWork: number | undefined
 ): Promise<void> {
-    let user = await User.findByPk(id)
-    if (!user) throw Error('404')
+    let foundUser = await User.findByPk(id)
+    if (!foundUser) throw Error('404')
 
     const userUpdated = {
-        firstName: firstName !== undefined ? firstName : user.firstName,
-        lastName: lastName !== undefined ? lastName : user.lastName,
-        birthday: birthday !== undefined ? birthday : user.birthday,
-        address: address !== undefined ? address : user.address,
-        zipcode: zipcode !== undefined ? zipcode : user.zipcode,
-        city: city !== undefined ? city : user.city,
-        hoursToWork: hoursToWork !== undefined ? hoursToWork : user.hoursToWork,
+        user: user !== undefined ? user : foundUser.user,
+        password: password !== undefined ? password : foundUser.password,
+        firstName: firstName !== undefined ? firstName : foundUser.firstName,
+        lastName: lastName !== undefined ? lastName : foundUser.lastName,
+        birthday: birthday !== undefined ? birthday : foundUser.birthday,
+        address: address !== undefined ? address : foundUser.address,
+        zipcode: zipcode !== undefined ? zipcode : foundUser.zipcode,
+        city: city !== undefined ? city : foundUser.city,
+        hoursToWork: hoursToWork !== undefined ? hoursToWork : foundUser.hoursToWork,
     }
 
-    await user.update(userUpdated)
+    await foundUser.update(userUpdated)
 }
 
 async function deleteUser(id: number): Promise<void> {

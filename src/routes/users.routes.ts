@@ -1,11 +1,12 @@
 import { Router } from 'express'
 import controller from '../controllers/users.controller'
+const auth = require('../middlewares/authorization')
 
 const router = Router()
 
 router
     .route('/')
-    .get((req, res, next) => {
+    .get(auth, (req, res, next) => {
         controller
             .getUsers()
             .then((users) => res.status(200).send(users))

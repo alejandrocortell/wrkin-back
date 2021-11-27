@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import controller from '../controllers/users.controller'
 const auth = require('../middlewares/authorization')
-
 const router = Router()
 
 router
@@ -12,7 +11,7 @@ router
             .then((users) => res.status(200).send(users))
             .finally(next)
     })
-    .post((req, res, next) => {
+    .post(auth, (req, res, next) => {
         controller
             .createUser(
                 req.body.firstName,
@@ -34,14 +33,14 @@ router
 
 router
     .route('/:id(\\d+)')
-    .get((req, res, next) => {
+    .get(auth, (req, res, next) => {
         controller
             .getUser(parseInt(req.params.id))
             .then((user) => res.status(200).send(user))
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put((req, res, next) => {
+    .put(auth, (req, res, next) => {
         controller
             .updateUser(
                 parseInt(req.params.id),
@@ -57,7 +56,7 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .delete((req, res, next) => {
+    .delete(auth, (req, res, next) => {
         controller
             .deleteUser(parseInt(req.params.id))
             .then(() => res.status(200).send())
@@ -65,7 +64,7 @@ router
             .finally(next)
     })
 
-router.route('/:id(\\d+)/punchins').get((req, res, next) => {
+router.route('/:id(\\d+)/punchins').get(auth, (req, res, next) => {
     controller
         .getPunchIns(parseInt(req.params.id))
         .then((punchIns) => {
@@ -75,7 +74,7 @@ router.route('/:id(\\d+)/punchins').get((req, res, next) => {
         .finally(next)
 })
 
-router.route('/:id(\\d+)/daysoff').get((req, res, next) => {
+router.route('/:id(\\d+)/daysoff').get(auth, (req, res, next) => {
     controller
         .getDaysOff(parseInt(req.params.id))
         .then((daysOff) => {
@@ -85,7 +84,7 @@ router.route('/:id(\\d+)/daysoff').get((req, res, next) => {
         .finally(next)
 })
 
-router.route('/:id(\\d+)/documents').get((req, res, next) => {
+router.route('/:id(\\d+)/documents').get(auth, (req, res, next) => {
     controller
         .getDocuments(parseInt(req.params.id))
         .then((documents) => {

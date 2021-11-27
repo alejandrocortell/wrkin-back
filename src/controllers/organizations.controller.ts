@@ -1,4 +1,4 @@
-import { Organization } from '../database/models'
+import { Organization, User } from '../database/models'
 
 async function getOrganizations(): Promise<any[]> {
     return await Organization.findAll({
@@ -33,10 +33,24 @@ async function deleteOrganization(id: number): Promise<void> {
     await organization.destroy()
 }
 
+async function getUsers(id: number): Promise<User[]> {
+    return await User.findAll({
+        include: [
+            {
+                model: Organization,
+                where: { id: id },
+                required: true,
+                attributes: [],
+            },
+        ],
+    })
+}
+
 export default {
     getOrganizations,
     createOrganization,
     getOrganization,
     updateOrganization,
     deleteOrganization,
+    getUsers,
 }

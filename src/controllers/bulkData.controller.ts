@@ -170,9 +170,15 @@ async function requestDayOff(): Promise<any[]> {
 
 async function userToOrganization(): Promise<any[]> {
     const users = await User.findAll()
+    const organizations = await Organization.findAll()
+
     // Add users to the first organization
     users.forEach((u) => {
         u.addOrganization(1)
+    })
+    // Add users to another random organization
+    users.forEach((u) => {
+        u.addOrganization(randomNumber(0, organizations.length - 1))
     })
     return
 }

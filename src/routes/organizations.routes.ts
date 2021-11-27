@@ -13,7 +13,7 @@ router
     })
     .post((req, res, next) => {
         controller
-            .createOrganization(req.body.organizations)
+            .createOrganization(req.body.name)
             .then((id) =>
                 res
                     .location(req.baseUrl + '/' + String(id))
@@ -34,7 +34,7 @@ router
     })
     .put((req, res, next) => {
         controller
-            .updateOrganization(parseInt(req.params.id), req.body.organizations)
+            .updateOrganization(parseInt(req.params.id), req.body.name)
             .then(() => res.status(201).send())
             .catch(() => res.status(404).send())
             .finally(next)
@@ -46,5 +46,15 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
+
+router.route('/:id(\\d+)/users').get((req, res, next) => {
+    controller
+        .getUsers(parseInt(req.params.id))
+        .then((users) => {
+            res.status(200).send(users)
+        })
+        .catch(() => res.status(404).send())
+        .finally(next)
+})
 
 export default router

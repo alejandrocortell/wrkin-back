@@ -12,7 +12,7 @@ import {
     User,
 } from '../database/models'
 import { generateBirthday, generatePunchIn, randomNumber } from './../utils/utils'
-import { encode, decode } from './../utils/cryptoJS'
+import { encode } from './../utils/cryptoJS'
 
 async function destroyData(): Promise<any> {
     const tables = Database.getQueryInterface()
@@ -122,6 +122,21 @@ async function users(): Promise<any[]> {
             updatedAt: new Date(),
         })
     }
+    usersData.push({
+        user: 'alejandro',
+        password: encode('123456'),
+        RoleId: 5,
+        ManagerId: 4,
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        birthday: generateBirthday(),
+        address: faker.address.streetName(),
+        zipcode: faker.address.zipCode(),
+        city: faker.address.city(),
+        hoursToWork: randomNumber(8, 40),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    })
     return await User.bulkCreate(usersData)
 }
 

@@ -21,5 +21,8 @@ package-lock.json
 # Build
 dist/
 
+# Uploads
+uploads/
+
 # Environment
 .env

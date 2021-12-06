@@ -1,17 +1,18 @@
 import { Router } from 'express'
 import controller from '../controllers/requestsDaysOff.controller'
+const auth = require('../middlewares/authorization')
 
 const router = Router()
 
 router
     .route('/')
-    .get((req, res, next) => {
+    .get(auth, (req, res, next) => {
         controller
             .getRequestsDaysOff()
             .then((requestDayOffs) => res.status(200).send(requestDayOffs))
             .finally(next)
     })
-    .post((req, res, next) => {
+    .post(auth, (req, res, next) => {
         controller
             .createRequestDayOff(
                 req.body.message,
@@ -32,14 +33,14 @@ router
 
 router
     .route('/:id(\\d+)')
-    .get((req, res, next) => {
+    .get(auth, (req, res, next) => {
         controller
             .getRequestDayOff(parseInt(req.params.id))
             .then((requestDayOff) => res.status(200).send(requestDayOff))
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put((req, res, next) => {
+    .put(auth, (req, res, next) => {
         controller
             .updateRequestDayOff(
                 parseInt(req.params.id),
@@ -54,7 +55,7 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .delete((req, res, next) => {
+    .delete(auth, (req, res, next) => {
         controller
             .deleteRequestDayOff(parseInt(req.params.id))
             .then(() => res.status(200).send())

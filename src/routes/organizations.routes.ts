@@ -1,17 +1,18 @@
 import { Router } from 'express'
 import controller from '../controllers/organizations.controller'
+const auth = require('../middlewares/authorization')
 
 const router = Router()
 
 router
     .route('/')
-    .get((req, res, next) => {
+    .get(auth, (req, res, next) => {
         controller
             .getOrganizations()
             .then((organizations) => res.status(200).send(organizations))
             .finally(next)
     })
-    .post((req, res, next) => {
+    .post(auth, (req, res, next) => {
         controller
             .createOrganization(req.body.name)
             .then((id) =>
@@ -25,21 +26,21 @@ router
 
 router
     .route('/:id(\\d+)')
-    .get((req, res, next) => {
+    .get(auth, (req, res, next) => {
         controller
             .getOrganization(parseInt(req.params.id))
             .then((organizations) => res.status(200).send(organizations))
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put((req, res, next) => {
+    .put(auth, (req, res, next) => {
         controller
             .updateOrganization(parseInt(req.params.id), req.body.name)
             .then(() => res.status(201).send())
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .delete((req, res, next) => {
+    .delete(auth, (req, res, next) => {
         controller
             .deleteOrganization(parseInt(req.params.id))
             .then(() => res.status(200).send())

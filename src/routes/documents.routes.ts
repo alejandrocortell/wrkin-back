@@ -2,17 +2,19 @@ import { Router } from 'express'
 import controller from '../controllers/documents.controller'
 const fs = require('fs')
 const upload = require('./../middlewares/upload')
+const auth = require('../middlewares/authorization')
+
 const router = Router()
 
 router
     .route('/')
-    .get((req, res, next) => {
+    .get(auth, (req, res, next) => {
         controller
             .getDocuments()
             .then((documents) => res.status(200).send(documents))
             .finally(next)
     })
-    .post(upload, (req, res, next) => {
+    .post(auth, upload, (req, res, next) => {
         if (req.file === undefined) {
             res.status(204).send({ message: 'Error, file undefined' })
         }
@@ -37,7 +39,7 @@ router
 
 router
     .route('/:id(\\d+)')
-    .get(async (req, res, next) => {
+    .get(auth, async (req, res, next) => {
         const { nameServer, name } = await controller.getDocument(parseInt(req.params.id))
 
         res.download(`./uploads/${nameServer}`, name, (err) => {
@@ -48,7 +50,7 @@ router
             }
         })
     })
-    .delete(async (req, res, next) => {
+    .delete(auth, async (req, res, next) => {
         const { nameServer } = await controller.getDocument(parseInt(req.params.id))
 
         controller

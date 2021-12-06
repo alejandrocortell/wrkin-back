@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import controller from '../controllers/users.controller'
 const auth = require('../middlewares/authorization')
+const role = require('../middlewares/rolePermission')
 const router = Router()
 
 router
@@ -35,7 +36,7 @@ router
 
 router
     .route('/:id(\\d+)')
-    .get(auth, (req, res, next) => {
+    .get(auth, role(['admin', 'employee']), (req, res, next) => {
         controller
             .getUser(parseInt(req.params.id))
             .then((user) => res.status(200).send(user))

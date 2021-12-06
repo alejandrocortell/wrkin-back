@@ -8,7 +8,7 @@ async function getToken(req, res): Promise<void> {
         where: {
             user: req.body.user,
         },
-        attributes: ['user', 'password'],
+        attributes: ['id', 'user', 'password'],
     })
 
     if (user.length !== 1 || decode(user[0].password) !== req.body.password) {
@@ -17,6 +17,7 @@ async function getToken(req, res): Promise<void> {
         const key = req.app.get('key')
         const payload = {
             check: true,
+            id: user[0].id,
         }
         const token = jwt.sign(payload, key, {
             expiresIn: 1440,

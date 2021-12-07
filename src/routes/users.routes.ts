@@ -2,6 +2,7 @@ import { Router } from 'express'
 import controller from '../controllers/users.controller'
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
+const sameUser = require('../middlewares/sameUser')
 const router = Router()
 
 router
@@ -43,7 +44,7 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, (req, res, next) => {
+    .put(auth, sameUser, (req, res, next) => {
         controller
             .updateUser(
                 parseInt(req.params.id),
@@ -61,7 +62,7 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .delete(auth, (req, res, next) => {
+    .delete(auth, sameUser, (req, res, next) => {
         controller
             .deleteUser(parseInt(req.params.id))
             .then(() => res.status(200).send())

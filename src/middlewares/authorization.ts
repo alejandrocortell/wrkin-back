@@ -15,16 +15,14 @@ const auth = (req, res, next) => {
     if (token) {
         jwt.verify(token, key, (err, decoded) => {
             if (err) {
-                return res.json({ message: 'Invalid token' })
+                res.status(203).json({ message: 'Invalid token' })
             } else {
                 req.decoded = decoded
                 next()
             }
         })
     } else {
-        res.status(404).send({
-            message: 'Token not found',
-        })
+        res.status(404).send({ message: 'Token not found' })
     }
 }
 

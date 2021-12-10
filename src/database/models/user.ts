@@ -22,6 +22,8 @@ import Organization from './organization'
 import Role from './role'
 
 class User extends Model {
+    public user!: string
+    public password!: string
     public firstName!: string
     public lastName!: string
     public birthday!: Date
@@ -36,19 +38,30 @@ class User extends Model {
     public updatedAt!: Date
 
     // Populated for inclusions
-    public readonly Organization: Organization[]
-    public readonly Role: Role
-    public readonly Manager: User
+    public readonly organization: Organization[]
+    public readonly role: Role
+    public readonly manager: User
+
+    public addOrganization!: BelongsToManyAddAssociationMixin<Organization, number>
+    public addOrganizations!: BelongsToManyAddAssociationsMixin<Organization, number>
+    public getOrganizations!: BelongsToManyGetAssociationsMixin<Organization>
+    public hasOrganization!: BelongsToManyHasAssociationMixin<Organization, number>
+    public hasOrganizations!: BelongsToManyHasAssociationsMixin<Organization, number>
+    public removeOrganization!: BelongsToManyRemoveAssociationMixin<Organization, number>
+    public removeOrganizations!: BelongsToManyRemoveAssociationsMixin<Organization, number>
+    public setOrganizations!: BelongsToManySetAssociationsMixin<Organization, number>
 
     public static associations: {
-        Organization: Association<User, Organization>
-        Role: Association<User, Role>
-        Manager: Association<User, User>
+        organization: Association<User, Organization>
+        role: Association<User, Role>
+        manager: Association<User, User>
     }
 
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
+                user: DataTypes.STRING,
+                password: DataTypes.STRING,
                 firstName: DataTypes.STRING,
                 lastName: DataTypes.STRING,
                 birthday: DataTypes.DATE,

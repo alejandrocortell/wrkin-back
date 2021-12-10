@@ -33,14 +33,14 @@ class Document extends Model {
     public updatedAt!: Date
 
     // Populated for inclusions
-    public readonly Organization: Organization[]
-    public readonly User?: User[]
-    public readonly DocumentsType: DocumentType[]
+    public readonly organization: Organization[]
+    public readonly user?: User[]
+    public readonly documentType: DocumentType[]
 
     public static associations: {
-        Organization: Association<Document, Organization>
-        User: Association<Document, User>
-        DocumentsType: Association<Document, DocumentType>
+        organization: Association<Document, Organization>
+        user: Association<Document, User>
+        documentType: Association<Document, DocumentType>
     }
 
     public static initialize(sequelize: Sequelize) {

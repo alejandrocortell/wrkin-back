@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import controller from '../controllers/documentsTypes.controller'
+import controller from '../controllers/daysOfftypes.controller'
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
 const router = Router()
@@ -8,13 +8,13 @@ router
     .route('/')
     .get(auth, (req, res, next) => {
         controller
-            .getDocumentsTypes()
-            .then((documentsTypes) => res.status(200).send(documentsTypes))
+            .getDaysOffTypes()
+            .then((dayOffType) => res.status(200).send(dayOffType))
             .finally(next)
     })
     .post(auth, role(['admin']), (req, res, next) => {
         controller
-            .createDocumentType(req.body.name)
+            .createDayOffType(req.body.dayOffType)
             .then((id) =>
                 res
                     .location(req.baseUrl + '/' + String(id))
@@ -28,21 +28,21 @@ router
     .route('/:id(\\d+)')
     .get(auth, (req, res, next) => {
         controller
-            .getDocumentType(parseInt(req.params.id))
-            .then((documentType) => res.status(200).send(documentType))
+            .getDayOffType(parseInt(req.params.id))
+            .then((dayOffType) => res.status(200).send(dayOffType))
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .put(auth, role(['admin']), (req, res, next) => {
         controller
-            .updateDocumentType(parseInt(req.params.id), req.body.name)
+            .updateDayOffType(parseInt(req.params.id), req.body.dayOffType)
             .then(() => res.status(201).send())
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .delete(auth, role(['admin']), (req, res, next) => {
         controller
-            .deleteDocumentType(parseInt(req.params.id))
+            .deleteDayOffType(parseInt(req.params.id))
             .then(() => res.status(200).send())
             .catch(() => res.status(404).send())
             .finally(next)

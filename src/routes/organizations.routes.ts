@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import controller from '../controllers/documentsTypes.controller'
+import controller from '../controllers/organizations.controller'
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
 const router = Router()
@@ -8,13 +8,13 @@ router
     .route('/')
     .get(auth, (req, res, next) => {
         controller
-            .getDocumentsTypes()
-            .then((documentsTypes) => res.status(200).send(documentsTypes))
+            .getOrganizations()
+            .then((organizations) => res.status(200).send(organizations))
             .finally(next)
     })
     .post(auth, role(['admin']), (req, res, next) => {
         controller
-            .createDocumentType(req.body.name)
+            .createOrganization(req.body.name)
             .then((id) =>
                 res
                     .location(req.baseUrl + '/' + String(id))
@@ -28,24 +28,34 @@ router
     .route('/:id(\\d+)')
     .get(auth, (req, res, next) => {
         controller
-            .getDocumentType(parseInt(req.params.id))
-            .then((documentType) => res.status(200).send(documentType))
+            .getOrganization(parseInt(req.params.id))
+            .then((organizations) => res.status(200).send(organizations))
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, role(['admin']), (req, res, next) => {
+    .put(auth, role(['admin', 'manager']), (req, res, next) => {
         controller
-            .updateDocumentType(parseInt(req.params.id), req.body.name)
+            .updateOrganization(parseInt(req.params.id), req.body.name)
             .then(() => res.status(201).send())
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .delete(auth, role(['admin']), (req, res, next) => {
         controller
-            .deleteDocumentType(parseInt(req.params.id))
+            .deleteOrganization(parseInt(req.params.id))
             .then(() => res.status(200).send())
             .catch(() => res.status(404).send())
             .finally(next)
     })
+
+router.route('/:id(\\d+)/users').get((req, res, next) => {
+    controller
+        .getUsers(parseInt(req.params.id))
+        .then((users) => {
+            res.status(200).send(users)
+        })
+        .catch(() => res.status(404).send())
+        .finally(next)
+})
 
 export default router

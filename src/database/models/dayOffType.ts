@@ -29,7 +29,7 @@ class DayOffType extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                documentType: DataTypes.STRING,
+                dayOffType: DataTypes.STRING,
             },
             {
                 sequelize: sequelize,

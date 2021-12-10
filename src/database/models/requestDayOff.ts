@@ -33,14 +33,14 @@ class RequestDayOff extends Model {
     public updatedAt!: Date
 
     // Populated for inclusions
-    public readonly Users: User[]
-    public readonly DaysOffTypes: DayOffType[]
-    public readonly StatusRequest: StatusRequest[]
+    public readonly user: User[]
+    public readonly dayOffType: DayOffType[]
+    public readonly statusRequest: StatusRequest[]
 
     public static associations: {
-        Users: Association<RequestDayOff, User>
-        DaysOffTypes: Association<RequestDayOff, DayOffType>
-        StatusRequest: Association<RequestDayOff, StatusRequest>
+        user: Association<RequestDayOff, User>
+        dayOffType: Association<RequestDayOff, DayOffType>
+        statusRequest: Association<RequestDayOff, StatusRequest>
     }
 
     public static initialize(sequelize: Sequelize) {

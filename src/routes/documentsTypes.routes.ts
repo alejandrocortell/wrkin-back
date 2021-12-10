@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import controller from '../controllers/documentsTypes.controller'
 const auth = require('../middlewares/authorization')
-
+const role = require('../middlewares/rolePermission')
 const router = Router()
 
 router
@@ -12,7 +12,7 @@ router
             .then((documentsTypes) => res.status(200).send(documentsTypes))
             .finally(next)
     })
-    .post(auth, (req, res, next) => {
+    .post(auth, role(['admin']), (req, res, next) => {
         controller
             .createDocumentType(req.body.name)
             .then((id) =>
@@ -33,14 +33,14 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, (req, res, next) => {
+    .put(auth, role(['admin']), (req, res, next) => {
         controller
             .updateDocumentType(parseInt(req.params.id), req.body.name)
             .then(() => res.status(201).send())
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .delete(auth, (req, res, next) => {
+    .delete(auth, role(['admin']), (req, res, next) => {
         controller
             .deleteDocumentType(parseInt(req.params.id))
             .then(() => res.status(200).send())

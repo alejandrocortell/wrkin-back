@@ -1,12 +1,13 @@
 import { Router } from 'express'
 import controller from '../controllers/requestsDaysOff.controller'
 const auth = require('../middlewares/authorization')
-
+const role = require('../middlewares/rolePermission')
+const createdBy = require('../middlewares/createdBy')
 const router = Router()
 
 router
     .route('/')
-    .get(auth, (req, res, next) => {
+    .get(auth, role(['admin', 'manager', 'rrhh', 'coordinator']), (req, res, next) => {
         controller
             .getRequestsDaysOff()
             .then((requestDayOffs) => res.status(200).send(requestDayOffs))
@@ -33,14 +34,14 @@ router
 
 router
     .route('/:id(\\d+)')
-    .get(auth, (req, res, next) => {
+    .get(auth, createdBy, (req, res, next) => {
         controller
             .getRequestDayOff(parseInt(req.params.id))
             .then((requestDayOff) => res.status(200).send(requestDayOff))
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, (req, res, next) => {
+    .put(auth, role(['admin', 'manager', 'coordinator', 'employee']), createdBy, (req, res, next) => {
         controller
             .updateRequestDayOff(
                 parseInt(req.params.id),
@@ -55,7 +56,7 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .delete(auth, (req, res, next) => {
+    .delete(auth, createdBy, (req, res, next) => {
         controller
             .deleteRequestDayOff(parseInt(req.params.id))
             .then(() => res.status(200).send())

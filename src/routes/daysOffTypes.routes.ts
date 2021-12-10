@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import controller from '../controllers/daysOfftypes.controller'
 const auth = require('../middlewares/authorization')
-
+const role = require('../middlewares/rolePermission')
 const router = Router()
 
 router
@@ -12,7 +12,7 @@ router
             .then((dayOffType) => res.status(200).send(dayOffType))
             .finally(next)
     })
-    .post(auth, (req, res, next) => {
+    .post(auth, role(['admin']), (req, res, next) => {
         controller
             .createDayOffType(req.body.dayOffType)
             .then((id) =>
@@ -33,14 +33,14 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, (req, res, next) => {
+    .put(auth, role(['admin']), (req, res, next) => {
         controller
             .updateDayOffType(parseInt(req.params.id), req.body.dayOffType)
             .then(() => res.status(201).send())
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .delete(auth, (req, res, next) => {
+    .delete(auth, role(['admin']), (req, res, next) => {
         controller
             .deleteDayOffType(parseInt(req.params.id))
             .then(() => res.status(200).send())

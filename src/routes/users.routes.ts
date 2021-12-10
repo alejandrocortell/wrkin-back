@@ -7,13 +7,13 @@ const router = Router()
 
 router
     .route('/')
-    .get(auth, (req, res, next) => {
+    .get(auth, role(['admin', 'manager', 'rrhh', 'coordinator']), (req, res, next) => {
         controller
             .getUsers()
             .then((users) => res.status(200).send(users))
             .finally(next)
     })
-    .post(auth, (req, res, next) => {
+    .post(auth, role(['admin', 'manager', 'rrhh', 'coordinator']), (req, res, next) => {
         controller
             .createUser(
                 req.body.user,
@@ -37,14 +37,14 @@ router
 
 router
     .route('/:id(\\d+)')
-    .get(auth, role(['admin', 'employee']), (req, res, next) => {
+    .get(auth, role(['admin', 'manager', 'rrhh', 'coordinator', 'employee']), sameUser, (req, res, next) => {
         controller
             .getUser(parseInt(req.params.id))
             .then((user) => res.status(200).send(user))
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, sameUser, (req, res, next) => {
+    .put(auth, role(['admin', 'manager', 'rrhh', 'employee']), sameUser, (req, res, next) => {
         controller
             .updateUser(
                 parseInt(req.params.id),
@@ -62,7 +62,7 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .delete(auth, sameUser, (req, res, next) => {
+    .delete(auth, role(['admin', 'manager', 'rrhh']), (req, res, next) => {
         controller
             .deleteUser(parseInt(req.params.id))
             .then(() => res.status(200).send())
@@ -70,34 +70,40 @@ router
             .finally(next)
     })
 
-router.route('/:id(\\d+)/punchins').get(auth, (req, res, next) => {
-    controller
-        .getPunchIns(parseInt(req.params.id))
-        .then((punchIns) => {
-            res.status(200).send(punchIns)
-        })
-        .catch(() => res.status(404).send())
-        .finally(next)
-})
+router
+    .route('/:id(\\d+)/punchins')
+    .get(auth, role(['admin', 'manager', 'rrhh', 'coordinator', 'employee']), sameUser, (req, res, next) => {
+        controller
+            .getPunchIns(parseInt(req.params.id))
+            .then((punchIns) => {
+                res.status(200).send(punchIns)
+            })
+            .catch(() => res.status(404).send())
+            .finally(next)
+    })
 
-router.route('/:id(\\d+)/daysoff').get(auth, (req, res, next) => {
-    controller
-        .getDaysOff(parseInt(req.params.id))
-        .then((daysOff) => {
-            res.status(200).send(daysOff)
-        })
-        .catch(() => res.status(404).send())
-        .finally(next)
-})
+router
+    .route('/:id(\\d+)/daysoff')
+    .get(auth, role(['admin', 'manager', 'rrhh', 'coordinator', 'employee']), sameUser, (req, res, next) => {
+        controller
+            .getDaysOff(parseInt(req.params.id))
+            .then((daysOff) => {
+                res.status(200).send(daysOff)
+            })
+            .catch(() => res.status(404).send())
+            .finally(next)
+    })
 
-router.route('/:id(\\d+)/documents').get(auth, (req, res, next) => {
-    controller
-        .getDocuments(parseInt(req.params.id))
-        .then((documents) => {
-            res.status(200).send(documents)
-        })
-        .catch(() => res.status(404).send())
-        .finally(next)
-})
+router
+    .route('/:id(\\d+)/documents')
+    .get(auth, role(['admin', 'manager', 'rrhh', 'coordinator', 'employee']), sameUser, (req, res, next) => {
+        controller
+            .getDocuments(parseInt(req.params.id))
+            .then((documents) => {
+                res.status(200).send(documents)
+            })
+            .catch(() => res.status(404).send())
+            .finally(next)
+    })
 
 export default router

@@ -3,12 +3,13 @@ import controller from '../controllers/documents.controller'
 const fs = require('fs')
 const upload = require('./../middlewares/upload')
 const auth = require('../middlewares/authorization')
-
+const role = require('../middlewares/rolePermission')
+const sameUser = require('../middlewares/sameUser')
 const router = Router()
 
 router
     .route('/')
-    .get(auth, (req, res, next) => {
+    .get(auth, role(['admin', 'manager', 'rrhh', 'coordinator']), (req, res, next) => {
         controller
             .getDocuments()
             .then((documents) => res.status(200).send(documents))

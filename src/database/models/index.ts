@@ -1,5 +1,4 @@
 import { Options, Sequelize } from 'sequelize'
-
 import Settings from './settings'
 import DayOffType from './dayOffType'
 import Document from './document'
@@ -41,23 +40,33 @@ let models = [
 ]
 models.forEach((model) => model.initialize(sequelize))
 
-Settings.belongsTo(Organization)
+Settings.belongsTo(Organization, { as: 'organization', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
 
-PunchIn.belongsTo(User)
+PunchIn.belongsTo(User, { as: 'user', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
 
-Document.belongsTo(DocumentType)
-Document.belongsTo(Organization)
-Document.belongsTo(User)
+Document.belongsTo(DocumentType, { as: 'documentType', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+Document.belongsTo(Organization, { as: 'organization', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+Document.belongsTo(User, { as: 'user', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
 
-RequestDayOff.belongsTo(DayOffType)
-RequestDayOff.belongsTo(User)
-RequestDayOff.belongsTo(StatusRequest)
+RequestDayOff.belongsTo(DayOffType, { as: 'dayOffType', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+RequestDayOff.belongsTo(User, { as: 'user', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+RequestDayOff.belongsTo(StatusRequest, { as: 'statusRequest', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
 
-User.belongsTo(Role)
-User.belongsTo(User, { as: 'Manager' })
+User.belongsTo(Role, { as: 'role', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+User.belongsTo(User, { as: 'manager', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
 
-User.belongsToMany(Organization, { through: 'User_Organization' })
-Organization.belongsToMany(User, { through: 'User_Organization' })
+User.belongsToMany(Organization, {
+    through: 'User_Organization',
+    as: 'organization',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
+Organization.belongsToMany(User, {
+    through: 'User_Organization',
+    as: 'user',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
 
 // Create database tables
 // alter: true update the database (if is necessary) wiht the actual model

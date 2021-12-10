@@ -1,22 +1,4 @@
-import {
-    Association,
-    DataTypes,
-    Model,
-    Sequelize,
-    BelongsToCreateAssociationMixin,
-    BelongsToGetAssociationMixin,
-    BelongsToSetAssociationMixin,
-    BelongsToManyAddAssociationMixin,
-    BelongsToManyAddAssociationsMixin,
-    BelongsToManyCountAssociationsMixin,
-    BelongsToManyCreateAssociationMixin,
-    BelongsToManyGetAssociationsMixin,
-    BelongsToManyHasAssociationMixin,
-    BelongsToManyHasAssociationsMixin,
-    BelongsToManyRemoveAssociationMixin,
-    BelongsToManyRemoveAssociationsMixin,
-    BelongsToManySetAssociationsMixin,
-} from 'sequelize'
+import { Association, DataTypes, Model, Sequelize } from 'sequelize'
 
 import Organization from './organization'
 
@@ -40,9 +22,18 @@ class Settings extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                marginHours: DataTypes.INTEGER,
-                allowModifyPunchIn: DataTypes.BOOLEAN,
-                allowInsertPastPunchIn: DataTypes.BOOLEAN,
+                marginHours: {
+                    type: DataTypes.INTEGER,
+                    allowNull: false,
+                },
+                allowModifyPunchIn: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                },
+                allowInsertPastPunchIn: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                },
             },
             {
                 sequelize: sequelize,

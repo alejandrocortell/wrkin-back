@@ -1,22 +1,4 @@
-import {
-    Association,
-    DataTypes,
-    Model,
-    Sequelize,
-    BelongsToCreateAssociationMixin,
-    BelongsToGetAssociationMixin,
-    BelongsToSetAssociationMixin,
-    BelongsToManyAddAssociationMixin,
-    BelongsToManyAddAssociationsMixin,
-    BelongsToManyCountAssociationsMixin,
-    BelongsToManyCreateAssociationMixin,
-    BelongsToManyGetAssociationsMixin,
-    BelongsToManyHasAssociationMixin,
-    BelongsToManyHasAssociationsMixin,
-    BelongsToManyRemoveAssociationMixin,
-    BelongsToManyRemoveAssociationsMixin,
-    BelongsToManySetAssociationsMixin,
-} from 'sequelize'
+import { Association, DataTypes, Model, Sequelize } from 'sequelize'
 
 import Organization from './organization'
 import User from './user'
@@ -46,9 +28,18 @@ class Document extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                name: DataTypes.STRING,
-                nameServer: DataTypes.STRING,
-                path: DataTypes.STRING,
+                name: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                nameServer: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                path: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
             },
             {
                 sequelize: sequelize,

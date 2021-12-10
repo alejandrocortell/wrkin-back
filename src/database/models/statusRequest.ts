@@ -1,22 +1,4 @@
-import {
-    Association,
-    DataTypes,
-    Model,
-    Sequelize,
-    BelongsToCreateAssociationMixin,
-    BelongsToGetAssociationMixin,
-    BelongsToSetAssociationMixin,
-    BelongsToManyAddAssociationMixin,
-    BelongsToManyAddAssociationsMixin,
-    BelongsToManyCountAssociationsMixin,
-    BelongsToManyCreateAssociationMixin,
-    BelongsToManyGetAssociationsMixin,
-    BelongsToManyHasAssociationMixin,
-    BelongsToManyHasAssociationsMixin,
-    BelongsToManyRemoveAssociationMixin,
-    BelongsToManyRemoveAssociationsMixin,
-    BelongsToManySetAssociationsMixin,
-} from 'sequelize'
+import { DataTypes, Model, Sequelize } from 'sequelize'
 
 class StatusRequest extends Model {
     public statusRequest!: string
@@ -29,7 +11,10 @@ class StatusRequest extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                statusRequest: DataTypes.STRING,
+                statusRequest: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
             },
             {
                 sequelize: sequelize,

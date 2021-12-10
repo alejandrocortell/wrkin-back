@@ -1,22 +1,4 @@
-import {
-    Association,
-    DataTypes,
-    Model,
-    Sequelize,
-    BelongsToCreateAssociationMixin,
-    BelongsToGetAssociationMixin,
-    BelongsToSetAssociationMixin,
-    BelongsToManyAddAssociationMixin,
-    BelongsToManyAddAssociationsMixin,
-    BelongsToManyCountAssociationsMixin,
-    BelongsToManyCreateAssociationMixin,
-    BelongsToManyGetAssociationsMixin,
-    BelongsToManyHasAssociationMixin,
-    BelongsToManyHasAssociationsMixin,
-    BelongsToManyRemoveAssociationMixin,
-    BelongsToManyRemoveAssociationsMixin,
-    BelongsToManySetAssociationsMixin,
-} from 'sequelize'
+import { Association, DataTypes, Model, Sequelize } from 'sequelize'
 
 import User from './user'
 
@@ -39,8 +21,14 @@ class PunchIn extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                start: DataTypes.DATE,
-                end: DataTypes.DATE,
+                start: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                },
+                end: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                },
             },
             {
                 sequelize: sequelize,

@@ -1,22 +1,4 @@
-import {
-    Association,
-    DataTypes,
-    Model,
-    Sequelize,
-    BelongsToCreateAssociationMixin,
-    BelongsToGetAssociationMixin,
-    BelongsToSetAssociationMixin,
-    BelongsToManyAddAssociationMixin,
-    BelongsToManyAddAssociationsMixin,
-    BelongsToManyCountAssociationsMixin,
-    BelongsToManyCreateAssociationMixin,
-    BelongsToManyGetAssociationsMixin,
-    BelongsToManyHasAssociationMixin,
-    BelongsToManyHasAssociationsMixin,
-    BelongsToManyRemoveAssociationMixin,
-    BelongsToManyRemoveAssociationsMixin,
-    BelongsToManySetAssociationsMixin,
-} from 'sequelize'
+import { DataTypes, Model, Sequelize } from 'sequelize'
 
 class Role extends Model {
     public name!: string
@@ -29,7 +11,10 @@ class Role extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                name: DataTypes.STRING,
+                name: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
             },
             {
                 sequelize: sequelize,

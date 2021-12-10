@@ -60,15 +60,42 @@ class User extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                user: DataTypes.STRING,
-                password: DataTypes.STRING,
-                firstName: DataTypes.STRING,
-                lastName: DataTypes.STRING,
-                birthday: DataTypes.DATE,
-                address: DataTypes.STRING,
-                zipcode: DataTypes.STRING,
-                city: DataTypes.STRING,
-                hoursToWork: DataTypes.INTEGER,
+                user: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                password: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                firstName: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                lastName: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                birthday: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                },
+                address: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                zipcode: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                city: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                hoursToWork: {
+                    type: DataTypes.INTEGER,
+                    allowNull: false,
+                },
             },
             {
                 sequelize: sequelize,

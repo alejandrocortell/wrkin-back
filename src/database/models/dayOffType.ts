@@ -1,22 +1,4 @@
-import {
-    Association,
-    DataTypes,
-    Model,
-    Sequelize,
-    BelongsToCreateAssociationMixin,
-    BelongsToGetAssociationMixin,
-    BelongsToSetAssociationMixin,
-    BelongsToManyAddAssociationMixin,
-    BelongsToManyAddAssociationsMixin,
-    BelongsToManyCountAssociationsMixin,
-    BelongsToManyCreateAssociationMixin,
-    BelongsToManyGetAssociationsMixin,
-    BelongsToManyHasAssociationMixin,
-    BelongsToManyHasAssociationsMixin,
-    BelongsToManyRemoveAssociationMixin,
-    BelongsToManyRemoveAssociationsMixin,
-    BelongsToManySetAssociationsMixin,
-} from 'sequelize'
+import { DataTypes, Model, Sequelize } from 'sequelize'
 
 class DayOffType extends Model {
     public dayOffType!: string
@@ -29,7 +11,10 @@ class DayOffType extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                dayOffType: DataTypes.STRING,
+                dayOffType: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
             },
             {
                 sequelize: sequelize,

@@ -1,22 +1,4 @@
-import {
-    Association,
-    DataTypes,
-    Model,
-    Sequelize,
-    BelongsToCreateAssociationMixin,
-    BelongsToGetAssociationMixin,
-    BelongsToSetAssociationMixin,
-    BelongsToManyAddAssociationMixin,
-    BelongsToManyAddAssociationsMixin,
-    BelongsToManyCountAssociationsMixin,
-    BelongsToManyCreateAssociationMixin,
-    BelongsToManyGetAssociationsMixin,
-    BelongsToManyHasAssociationMixin,
-    BelongsToManyHasAssociationsMixin,
-    BelongsToManyRemoveAssociationMixin,
-    BelongsToManyRemoveAssociationsMixin,
-    BelongsToManySetAssociationsMixin,
-} from 'sequelize'
+import { Association, DataTypes, Model, Sequelize } from 'sequelize'
 
 import User from './user'
 import DayOffType from './dayOffType'
@@ -46,9 +28,18 @@ class RequestDayOff extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
-                message: DataTypes.TEXT,
-                start: DataTypes.DATE,
-                end: DataTypes.DATE,
+                message: {
+                    type: DataTypes.TEXT,
+                    allowNull: false,
+                },
+                start: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                },
+                end: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                },
             },
             {
                 sequelize: sequelize,

@@ -10,7 +10,7 @@ async function createPunchIn(start: Date, end: Date, user: number): Promise<numb
     let punchIn = await PunchIn.create({
         start: start,
         end: end,
-        user: user,
+        userId: user,
     })
 
     return punchIn.id

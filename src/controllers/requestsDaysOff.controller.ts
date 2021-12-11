@@ -11,16 +11,15 @@ async function createRequestDayOff(
     start: Date,
     end: Date,
     user: number,
-    dayOffType: number,
-    statusRequest: number
+    dayOffType: number
 ): Promise<number> {
     let requestDayOff = await RequestDayOff.create({
         message: message,
         start: start,
         end: end,
-        user: user,
-        dayOffType: dayOffType,
-        statusRequest: statusRequest,
+        userId: user,
+        dayOffTypeId: dayOffType,
+        statusRequestId: 3,
     })
 
     return requestDayOff.id

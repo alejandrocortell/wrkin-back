@@ -78,7 +78,7 @@ router
             .then((punchIns) => {
                 res.status(200).send(punchIns)
             })
-            .catch(() => res.status(404).send())
+            .catch((err) => res.status(404).send({ err }))
             .finally(next)
     })
 

@@ -15,14 +15,7 @@ router
     })
     .post(auth, (req, res, next) => {
         controller
-            .createRequestDayOff(
-                req.body.message,
-                req.body.start,
-                req.body.end,
-                req.body.requestDayOff,
-                req.body.dayOffType,
-                req.body.statusRequest
-            )
+            .createRequestDayOff(req.body.message, req.body.start, req.body.end, req.body.user, req.body.dayOffType)
             .then((id) =>
                 res
                     .location(req.baseUrl + '/' + String(id))

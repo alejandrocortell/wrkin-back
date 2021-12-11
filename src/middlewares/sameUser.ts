@@ -5,7 +5,7 @@ const sameUser = async (req, res, next) => {
     const id = parseInt(req.params.id)
     const allowRoles = [1, 2, 3]
 
-    if (allowRoles.includes(user.RoleId)) {
+    if (allowRoles.includes(user.roleId)) {
         next()
     } else if (id === req.decoded.id) {
         next()

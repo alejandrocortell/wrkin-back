@@ -55,18 +55,8 @@ RequestDayOff.belongsTo(StatusRequest, { as: 'statusRequest', foreignKey: { allo
 User.belongsTo(Role, { as: 'role', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
 User.belongsTo(User, { as: 'manager', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
 
-User.belongsToMany(Organization, {
-    through: 'User_Organization',
-    as: 'organization',
-    foreignKey: { allowNull: false },
-    onDelete: 'CASCADE',
-})
-Organization.belongsToMany(User, {
-    through: 'User_Organization',
-    as: 'user',
-    foreignKey: { allowNull: false },
-    onDelete: 'CASCADE',
-})
+User.belongsToMany(Organization, { through: 'User_Organization' })
+Organization.belongsToMany(User, { through: 'User_Organization' })
 
 // Create database tables
 // alter: true update the database (if is necessary) wiht the actual model

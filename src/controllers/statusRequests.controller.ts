@@ -7,7 +7,7 @@ async function getStatusRequests(): Promise<any[]> {
 }
 
 async function createStatusRequest(name: string): Promise<number> {
-    let statusRequest = await StatusRequest.create({ name: name })
+    let statusRequest = await StatusRequest.create({ statusRequest: name })
 
     return statusRequest.id
 }

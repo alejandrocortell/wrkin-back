@@ -81,6 +81,7 @@ async function getPunchIns(id: number): Promise<PunchIn[]> {
         include: [
             {
                 model: User,
+                as: 'user',
                 where: { id: id },
                 required: true,
                 attributes: [],
@@ -94,6 +95,7 @@ async function getDaysOff(id: number): Promise<RequestDayOff[]> {
         include: [
             {
                 model: User,
+                as: 'user',
                 where: { id: id },
                 required: true,
                 attributes: [],
@@ -107,6 +109,7 @@ async function getDocuments(id: number): Promise<Document[]> {
         include: [
             {
                 model: User,
+                as: 'user',
                 where: { id: id },
                 required: true,
                 attributes: [],

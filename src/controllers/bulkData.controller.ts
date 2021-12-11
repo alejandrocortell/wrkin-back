@@ -69,7 +69,7 @@ async function settings(): Promise<any[]> {
     let settingsData = []
     for (let index = 1; index < 6; index++) {
         settingsData.push({
-            organization: index,
+            organizationId: index,
             marginHours: randomNumber(1, 5),
             allowModifyPunchIn: true,
             allowInsertPastPunchIn: true,
@@ -109,8 +109,8 @@ async function users(): Promise<any[]> {
         usersData.push({
             user: faker.internet.userName(),
             password: encode(faker.internet.password()),
-            RoleId: roleId,
-            ManagerId: roleId - 1,
+            roleId: roleId,
+            managerId: roleId - 1,
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),
             birthday: generateBirthday(),
@@ -125,8 +125,8 @@ async function users(): Promise<any[]> {
     usersData.push({
         user: 'alejandro',
         password: encode('123456'),
-        RoleId: 5,
-        ManagerId: 4,
+        roleId: 5,
+        managerId: 4,
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         birthday: generateBirthday(),
@@ -152,7 +152,7 @@ async function punchIns(): Promise<any[]> {
                 punchInsData.push({
                     start: element[0],
                     end: element[1],
-                    UserId: i,
+                    userId: i,
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 })
@@ -174,9 +174,9 @@ async function requestDayOff(): Promise<any[]> {
                 message: faker.lorem.paragraph(3),
                 start: dayStart,
                 end: dayEnd,
-                UserId: i,
-                DayOffTypeId: randomNumber(1, 5),
-                StatusRequestId: randomDay > 0 ? randomNumber(1, 3) : randomNumber(1, 2),
+                userId: i,
+                dayOffTypeId: randomNumber(1, 5),
+                statusRequestId: randomDay > 0 ? randomNumber(1, 3) : randomNumber(1, 2),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             })
@@ -190,12 +190,12 @@ async function userToOrganization(): Promise<any[]> {
     const organizations = await Organization.findAll()
 
     // Add users to the first organization
-    users.forEach((u) => {
+    await users.forEach((u) => {
         u.addOrganization(1)
     })
     // Add users to another random organization
-    users.forEach((u) => {
-        u.addOrganization(randomNumber(0, organizations.length - 1))
+    await users.forEach((u) => {
+        u.addOrganization(randomNumber(2, organizations.length - 1))
     })
     return
 }

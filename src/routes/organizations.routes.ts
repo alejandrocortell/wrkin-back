@@ -2,6 +2,7 @@ import { Router } from 'express'
 import controller from '../controllers/organizations.controller'
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
+const sameOrganization = require('../middlewares/sameOrganization')
 const router = Router()
 
 router
@@ -33,7 +34,7 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, role(['admin', 'manager']), (req, res, next) => {
+    .put(auth, role(['admin', 'manager']), sameOrganization, (req, res, next) => {
         controller
             .updateOrganization(parseInt(req.params.id), req.body.name)
             .then(() => res.status(201).send())
@@ -48,14 +49,16 @@ router
             .finally(next)
     })
 
-router.route('/:id(\\d+)/users').get((req, res, next) => {
-    controller
-        .getUsers(parseInt(req.params.id))
-        .then((users) => {
-            res.status(200).send(users)
-        })
-        .catch(() => res.status(404).send())
-        .finally(next)
-})
+router
+    .route('/:id(\\d+)/users')
+    .get(auth, role(['admin', 'manager', 'rrhh', 'coordinator']), sameOrganization, (req, res, next) => {
+        controller
+            .getUsers(parseInt(req.params.id))
+            .then((users) => {
+                res.status(200).send(users)
+            })
+            .catch(() => res.status(404).send())
+            .finally(next)
+    })
 
 export default router

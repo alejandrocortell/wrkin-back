@@ -18,9 +18,9 @@ async function createDocument(
         name: name,
         nameServer: nameServer,
         path: path,
-        OrganizationId: organization,
-        UserId: user,
-        DocumentTypeId: documentType,
+        organizationId: organization,
+        userId: user,
+        documentTypeId: documentType,
     })
 
     return document.id

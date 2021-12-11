@@ -14,7 +14,7 @@ router
     })
     .post(auth, role(['admin']), (req, res, next) => {
         controller
-            .createStatusRequest(req.body.name)
+            .createStatusRequest(req.body.statusRequest)
             .then((id) =>
                 res
                     .location(req.baseUrl + '/' + String(id))

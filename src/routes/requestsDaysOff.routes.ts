@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import controller from '../controllers/requestsDaysOff.controller'
+import { IExtendRequest } from '../extends/express'
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
 const createdBy = require('../middlewares/createdBy')
@@ -13,9 +14,9 @@ router
             .then((requestDayOffs) => res.status(200).send(requestDayOffs))
             .finally(next)
     })
-    .post(auth, (req, res, next) => {
+    .post(auth, (req: IExtendRequest, res, next) => {
         controller
-            .createRequestDayOff(req.body.message, req.body.start, req.body.end, req.body.user, req.body.dayOffType)
+            .createRequestDayOff(req.body.message, req.body.start, req.body.end, req.decoded.id, req.body.dayOffType)
             .then((id) =>
                 res
                     .location(req.baseUrl + '/' + String(id))
@@ -34,14 +35,14 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, role(['admin', 'manager', 'coordinator', 'employee']), createdBy, (req, res, next) => {
+    .put(auth, role(['admin', 'manager', 'coordinator', 'employee']), createdBy, (req: IExtendRequest, res, next) => {
         controller
             .updateRequestDayOff(
                 parseInt(req.params.id),
                 req.body.statusRequest ? req.body.statusRequest : undefined,
                 req.body.start ? req.body.start : undefined,
                 req.body.end ? req.body.end : undefined,
-                req.body.user ? req.body.user : undefined,
+                req.decoded.id,
                 req.body.dayOffType ? req.body.dayOffType : undefined,
                 req.body.statusRequest ? req.body.statusRequest : undefined
             )

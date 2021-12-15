@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import controller from '../controllers/punchsIn.controller'
+import { IExtendRequest } from '../extends/express'
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
 const createdBy = require('../middlewares/createdBy')
@@ -13,9 +14,9 @@ router
             .then((punchIn) => res.status(200).send(punchIn))
             .finally(next)
     })
-    .post(auth, (req, res, next) => {
+    .post(auth, (req: IExtendRequest, res, next) => {
         controller
-            .createPunchIn(req.body.start, req.body.end, req.body.user)
+            .createPunchIn(req.body.start, req.body.end, req.decoded.id)
             .then((id) =>
                 res
                     .location(req.baseUrl + '/' + String(id))
@@ -34,13 +35,13 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, role(['admin', 'manager', 'coordinator', 'employee']), createdBy, (req, res, next) => {
+    .put(auth, role(['admin', 'manager', 'coordinator', 'employee']), createdBy, (req: IExtendRequest, res, next) => {
         controller
             .updatePunchIn(
                 parseInt(req.params.id),
                 req.body.start ? req.body.start : undefined,
                 req.body.end ? req.body.end : undefined,
-                req.body.user ? req.body.user : undefined
+                req.decoded.id
             )
             .then(() => res.status(201).send())
             .catch(() => res.status(404).send())

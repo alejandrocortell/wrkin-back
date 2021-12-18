@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import controller from '../controllers/daysOfftypes.controller'
+const val = require('../utils/validators')
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
 const router = Router()
@@ -13,13 +14,17 @@ router
             .finally(next)
     })
     .post(auth, role(['admin']), (req, res, next) => {
+        const dayOffType = req.body.dayOffType
+
+        !val.isString(dayOffType) && res.status(400).send({ message: 'Invalid dayOffType' })
+
         controller
-            .createDayOffType(req.body.dayOffType)
-            .then((id) =>
+            .createDayOffType(dayOffType)
+            .then((dayOffType) =>
                 res
-                    .location(req.baseUrl + '/' + String(id))
+                    .location(req.baseUrl + '/' + String(dayOffType.id))
                     .status(201)
-                    .send()
+                    .send({ message: 'Created', dayOffType: dayOffType })
             )
             .finally(next)
     })
@@ -29,21 +34,34 @@ router
     .get(auth, (req, res, next) => {
         controller
             .getDayOffType(parseInt(req.params.id))
-            .then((dayOffType) => res.status(200).send(dayOffType))
+            .then((dayOffType) => {
+                dayOffType === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(200).send({ message: 'Found', dayOffType: dayOffType })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .put(auth, role(['admin']), (req, res, next) => {
+        const dayOffType = req.body.dayOffType
+
+        dayOffType !== undefined && !val.isString(dayOffType) && res.status(400).send({ message: 'Invalid dayOffType' })
+
         controller
             .updateDayOffType(parseInt(req.params.id), req.body.dayOffType)
-            .then(() => res.status(201).send())
+            .then((dayOffType) => {
+                dayOffType === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(201).send({ message: 'Updated', dayOffType: dayOffType })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .delete(auth, role(['admin']), (req, res, next) => {
         controller
             .deleteDayOffType(parseInt(req.params.id))
-            .then(() => res.status(200).send())
+            .then((dayOffType) => {
+                dayOffType === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(200).send({ message: 'Deleted' })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })

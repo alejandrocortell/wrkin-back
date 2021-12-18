@@ -6,31 +6,34 @@ async function getDaysOffTypes(): Promise<any[]> {
     })
 }
 
-async function createDayOffType(name: string): Promise<number> {
+async function createDayOffType(name: string): Promise<any> {
     let dayOffType = await DayOffType.create({ dayOffType: name })
-
-    return dayOffType.id
-}
-
-async function getDayOffType(id: number): Promise<any> {
-    let dayOffType = await DayOffType.findByPk(id)
-    if (!dayOffType) throw Error('404')
 
     return dayOffType
 }
 
-async function updateDayOffType(id: number, name: string): Promise<void> {
+async function getDayOffType(id: number): Promise<any> {
     let dayOffType = await DayOffType.findByPk(id)
-    if (!dayOffType) throw Error('404')
+    if (dayOffType === null) return 404
 
-    await dayOffType.update({ dayOffType: name })
+    return dayOffType
 }
 
-async function deleteDayOffType(id: number): Promise<void> {
+async function updateDayOffType(id: number, name: string): Promise<any> {
     let dayOffType = await DayOffType.findByPk(id)
-    if (!dayOffType) throw Error('404')
+    if (dayOffType === null) return 404
 
-    await dayOffType.destroy()
+    dayOffType = await dayOffType.update({ dayOffType: name })
+    if (dayOffType === null) return 404
+    return dayOffType
+}
+
+async function deleteDayOffType(id: number): Promise<any> {
+    let dayOffType = await DayOffType.findByPk(id)
+    if (dayOffType === null) return 404
+
+    const deleted = await dayOffType.destroy()
+    return deleted
 }
 
 export default {

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import controller from '../controllers/statusRequests.controller'
+const val = require('../utils/validators')
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
 const router = Router()
@@ -13,13 +14,17 @@ router
             .finally(next)
     })
     .post(auth, role(['admin']), (req, res, next) => {
+        const statusRequest = req.body.statusRequest
+
+        !val.isString(statusRequest) && res.status(400).send({ message: 'Invalid statusRequest' })
+
         controller
-            .createStatusRequest(req.body.statusRequest)
-            .then((id) =>
+            .createStatusRequest(statusRequest)
+            .then((statusRequest) =>
                 res
-                    .location(req.baseUrl + '/' + String(id))
+                    .location(req.baseUrl + '/' + String(statusRequest.id))
                     .status(201)
-                    .send()
+                    .send({ message: 'Created', statusRequest: statusRequest })
             )
             .finally(next)
     })
@@ -29,21 +34,34 @@ router
     .get(auth, (req, res, next) => {
         controller
             .getStatusRequest(parseInt(req.params.id))
-            .then((statusRequest) => res.status(200).send(statusRequest))
+            .then((statusRequest) => {
+                statusRequest === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(200).send({ message: 'Found', statusRequest: statusRequest })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .put(auth, role(['admin']), (req, res, next) => {
+        const statusRequest = req.body.statusRequest
+
+        !val.isString(statusRequest) && res.status(400).send({ message: 'Invalid statusRequest' })
+
         controller
-            .updateStatusRequest(parseInt(req.params.id), req.body.name)
-            .then(() => res.status(201).send())
+            .updateStatusRequest(parseInt(req.params.id), statusRequest)
+            .then((statusRequest) => {
+                statusRequest === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(200).send({ message: 'Updated', statusRequest: statusRequest })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .delete(auth, role(['admin']), (req, res, next) => {
         controller
             .deleteStatusRequest(parseInt(req.params.id))
-            .then(() => res.status(200).send())
+            .then((statusRequest) => {
+                statusRequest === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(200).send({ message: 'Deleted' })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })

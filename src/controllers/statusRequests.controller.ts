@@ -1,3 +1,4 @@
+import { stat } from 'fs'
 import { StatusRequest } from '../database/models'
 
 async function getStatusRequests(): Promise<any[]> {
@@ -6,31 +7,35 @@ async function getStatusRequests(): Promise<any[]> {
     })
 }
 
-async function createStatusRequest(name: string): Promise<number> {
+async function createStatusRequest(name: string): Promise<any> {
     let statusRequest = await StatusRequest.create({ statusRequest: name })
-
-    return statusRequest.id
-}
-
-async function getStatusRequest(id: number): Promise<any> {
-    let statusRequest = await StatusRequest.findByPk(id)
-    if (!statusRequest) throw Error('404')
+    if (statusRequest === null) return 404
 
     return statusRequest
 }
 
-async function updateStatusRequest(id: number, name: string): Promise<void> {
+async function getStatusRequest(id: number): Promise<any> {
     let statusRequest = await StatusRequest.findByPk(id)
-    if (!statusRequest) throw Error('404')
+    if (statusRequest === null) return 404
 
-    await statusRequest.update({ name: name })
+    return statusRequest
 }
 
-async function deleteStatusRequest(id: number): Promise<void> {
+async function updateStatusRequest(id: number, name: string): Promise<any> {
     let statusRequest = await StatusRequest.findByPk(id)
-    if (!statusRequest) throw Error('404')
+    if (statusRequest === null) return 404
 
-    await statusRequest.destroy()
+    statusRequest = await statusRequest.update({ name: name })
+    if (statusRequest === null) return 404
+    return statusRequest
+}
+
+async function deleteStatusRequest(id: number): Promise<any> {
+    let statusRequest = await StatusRequest.findByPk(id)
+    if (statusRequest === null) return 404
+
+    const deleted = await statusRequest.destroy()
+    return deleted
 }
 
 export default {

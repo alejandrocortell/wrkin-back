@@ -14,3 +14,7 @@ export const isDate = (date) => {
     const a = new Date(date)
     return a.getTime() === a.getTime()
 }
+
+export const isBoolean = (bool) => {
+    return typeof bool === 'boolean' ? true : false
+}

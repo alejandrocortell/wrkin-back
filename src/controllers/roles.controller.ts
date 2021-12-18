@@ -6,31 +6,34 @@ async function getRoles(): Promise<any[]> {
     })
 }
 
-async function createRole(name: string): Promise<number> {
+async function createRole(name: string): Promise<any> {
     let role = await Role.create({ name: name })
-
-    return role.id
-}
-
-async function getRole(id: number): Promise<any> {
-    let role = await Role.findByPk(id)
-    if (!role) throw Error('404')
 
     return role
 }
 
-async function updateRole(id: number, name: string): Promise<void> {
+async function getRole(id: number): Promise<any> {
     let role = await Role.findByPk(id)
-    if (!role) throw Error('404')
+    if (role === null) return 404
 
-    await role.update({ name: name })
+    return role
 }
 
-async function deleteRole(id: number): Promise<void> {
+async function updateRole(id: number, name: string): Promise<any> {
     let role = await Role.findByPk(id)
-    if (!role) throw Error('404')
+    if (role === null) return 404
 
-    await role.destroy()
+    role = await role.update({ name: name })
+    if (role === null) return 404
+    return role
+}
+
+async function deleteRole(id: number): Promise<any> {
+    let role = await Role.findByPk(id)
+    if (role === null) return 404
+
+    const deleted = await role.destroy()
+    return deleted
 }
 
 export default {

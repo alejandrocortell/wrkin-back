@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import controller from '../controllers/requestsDaysOff.controller'
 import { IExtendRequest } from '../extends/express'
+const val = require('../utils/validators')
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
 const createdBy = require('../middlewares/createdBy')
@@ -15,13 +16,23 @@ router
             .finally(next)
     })
     .post(auth, (req: IExtendRequest, res, next) => {
+        const message = req.body.message
+        const start = req.body.start
+        const end = req.body.end
+        const dayOffType = req.body.dayOffType
+
+        !val.isString(message) && res.status(400).send({ message: 'Invalid message' })
+        !val.isDate(start) && res.status(400).send({ message: 'Invalid start' })
+        !val.isDate(end) && res.status(400).send({ message: 'Invalid end' })
+        !val.isNumber(dayOffType) && res.status(400).send({ message: 'Invalid dayOffType' })
+
         controller
-            .createRequestDayOff(req.body.message, req.body.start, req.body.end, req.decoded.id, req.body.dayOffType)
-            .then((id) =>
+            .createRequestDayOff(message, start, end, req.decoded.id, dayOffType)
+            .then((requestDayOff) =>
                 res
-                    .location(req.baseUrl + '/' + String(id))
+                    .location(req.baseUrl + '/' + String(requestDayOff.id))
                     .status(201)
-                    .send()
+                    .send({ message: 'Created', requestDayOff: requestDayOff })
             )
             .finally(next)
     })
@@ -31,29 +42,52 @@ router
     .get(auth, createdBy, (req, res, next) => {
         controller
             .getRequestDayOff(parseInt(req.params.id))
-            .then((requestDayOff) => res.status(200).send(requestDayOff))
+            .then((requestDayOff) => {
+                requestDayOff === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(200).send({ message: 'Found', requestDayOff: requestDayOff })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .put(auth, role(['admin', 'manager', 'coordinator', 'employee']), createdBy, (req: IExtendRequest, res, next) => {
+        const message = req.body.message
+        const start = req.body.start
+        const end = req.body.end
+        const dayOffType = req.body.dayOffType
+        const statusRequest = req.body.statusRequest
+
+        message !== undefined && !val.isString(message) && res.status(400).send({ message: 'Invalid message' })
+        start !== undefined && !val.isDate(start) && res.status(400).send({ message: 'Invalid start' })
+        end !== undefined && !val.isDate(end) && res.status(400).send({ message: 'Invalid end' })
+        dayOffType !== undefined && !val.isNumber(dayOffType) && res.status(400).send({ message: 'Invalid dayOffType' })
+        statusRequest !== undefined &&
+            !val.isNumber(statusRequest) &&
+            res.status(400).send({ message: 'Invalid statusRequest' })
+
         controller
             .updateRequestDayOff(
                 parseInt(req.params.id),
-                req.body.statusRequest ? req.body.statusRequest : undefined,
-                req.body.start ? req.body.start : undefined,
-                req.body.end ? req.body.end : undefined,
+                message ? message : undefined,
+                start ? start : undefined,
+                end ? end : undefined,
                 req.decoded.id,
-                req.body.dayOffType ? req.body.dayOffType : undefined,
-                req.body.statusRequest ? req.body.statusRequest : undefined
+                dayOffType ? dayOffType : undefined,
+                statusRequest ? statusRequest : undefined
             )
-            .then(() => res.status(201).send())
+            .then((requestDayOff) => {
+                requestDayOff === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(201).send({ message: 'Updated', requestDayOff: requestDayOff })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .delete(auth, createdBy, (req, res, next) => {
         controller
             .deleteRequestDayOff(parseInt(req.params.id))
-            .then(() => res.status(200).send())
+            .then((requestDayOff) => {
+                requestDayOff === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(200).send({ message: 'Deleted' })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })

@@ -12,7 +12,7 @@ async function createRequestDayOff(
     end: Date,
     user: number,
     dayOffType: number
-): Promise<number> {
+): Promise<any> {
     let requestDayOff = await RequestDayOff.create({
         message: message,
         start: start,
@@ -22,12 +22,12 @@ async function createRequestDayOff(
         statusRequestId: 3,
     })
 
-    return requestDayOff.id
+    return requestDayOff
 }
 
 async function getRequestDayOff(id: number): Promise<any> {
     let requestDayOff = await RequestDayOff.findByPk(id)
-    if (!requestDayOff) throw Error('404')
+    if (requestDayOff === null) return 404
 
     return requestDayOff
 }
@@ -40,9 +40,9 @@ async function updateRequestDayOff(
     user: number | undefined,
     dayOffType: number | undefined,
     statusRequest: number | undefined
-): Promise<void> {
+): Promise<any> {
     let requestDayOff = await RequestDayOff.findByPk(id)
-    if (!requestDayOff) throw Error('404')
+    if (requestDayOff === null) return 404
 
     const requestDayOffUpdated = {
         message: message !== undefined ? message : requestDayOff.message,
@@ -53,14 +53,17 @@ async function updateRequestDayOff(
         statusRequest: statusRequest !== undefined ? statusRequest : requestDayOff.statusRequest,
     }
 
-    await requestDayOff.update(requestDayOffUpdated)
+    requestDayOff = await requestDayOff.update(requestDayOffUpdated)
+    if (requestDayOff === null) return 404
+    return requestDayOff
 }
 
-async function deleteRequestDayOff(id: number): Promise<void> {
+async function deleteRequestDayOff(id: number): Promise<any> {
     let requestDayOff = await RequestDayOff.findByPk(id)
-    if (!requestDayOff) throw Error('404')
+    if (requestDayOff === null) return 404
 
-    await requestDayOff.destroy()
+    const deleted = await requestDayOff.destroy()
+    return deleted
 }
 
 export default {

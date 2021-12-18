@@ -13,7 +13,7 @@ async function createDocument(
     organization: number,
     user: number,
     documentType: number
-): Promise<number> {
+): Promise<any> {
     let document = await Document.create({
         name: name,
         nameServer: nameServer,
@@ -23,21 +23,22 @@ async function createDocument(
         documentTypeId: documentType,
     })
 
-    return document.id
+    return document
 }
 
 async function getDocument(id: number): Promise<any> {
     let document = await Document.findByPk(id)
-    if (!document) throw Error('404')
+    if (document === null) return 404
 
     return document
 }
 
-async function deleteDocument(id: number): Promise<void> {
+async function deleteDocument(id: number): Promise<any> {
     let document = await Document.findByPk(id)
-    if (!document) throw Error('404')
+    if (document === null) return 404
 
-    await document.destroy()
+    const deleted = await document.destroy()
+    return deleted
 }
 
 export default {

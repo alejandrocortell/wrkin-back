@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import controller from '../controllers/documents.controller'
+const val = require('../utils/validators')
 const fs = require('fs')
 const upload = require('./../middlewares/upload')
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
-const sameUser = require('../middlewares/sameUser')
 const router = Router()
 
 router
@@ -20,6 +20,14 @@ router
             res.status(204).send({ message: 'Error, file undefined' })
         }
 
+        const organization = +req.body.organization
+        const user = +req.body.user
+        const documentType = +req.body.documentType
+
+        !val.isNumber(organization) && res.status(400).send({ message: 'Invalid organization' })
+        !val.isNumber(user) && res.status(400).send({ message: 'Invalid user' })
+        !val.isNumber(documentType) && res.status(400).send({ message: 'Invalid documentType' })
+
         controller
             .createDocument(
                 req.file.originalname,
@@ -29,9 +37,9 @@ router
                 +req.body.user,
                 +req.body.documentType
             )
-            .then((id) =>
+            .then((document) =>
                 res
-                    .location(req.baseUrl + '/' + String(id))
+                    .location(req.baseUrl + '/' + String(document.id))
                     .status(201)
                     .send({ message: 'Successfully uploaded files' })
             )

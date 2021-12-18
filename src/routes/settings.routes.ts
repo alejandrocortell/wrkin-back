@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import controller from '../controllers/settings.controller'
+const val = require('../utils/validators')
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
 const sameOrganization = require('../middlewares/sameOrganization')
@@ -7,18 +8,23 @@ const sameOrganization = require('../middlewares/sameOrganization')
 const router = Router()
 
 router.route('/').post(auth, role(['admin']), (req, res, next) => {
+    const marginHours = req.body.marginHours
+    const allowModifyPunchIn = req.body.allowModifyPunchIn
+    const allowInsertPastPunchIn = req.body.allowInsertPastPunchIn
+    const organizationId = req.body.organizationId
+
+    !val.isDate(marginHours) && res.status(400).send({ message: 'Invalid marginHours' })
+    !val.isBoolean(allowModifyPunchIn) && res.status(400).send({ message: 'Invalid allowModifyPunchIn' })
+    !val.isBoolean(allowInsertPastPunchIn) && res.status(400).send({ message: 'Invalid allowInsertPastPunchIn' })
+    !val.isNumber(organizationId) && res.status(400).send({ message: 'Invalid organizationId' })
+
     controller
-        .createSettings(
-            req.body.marginHours,
-            req.body.allowModifyPunchIn,
-            req.body.allowInsertPastPunchIn,
-            req.body.organizationId
-        )
-        .then((id) =>
+        .createSettings(marginHours, allowModifyPunchIn, allowInsertPastPunchIn, organizationId)
+        .then((settings) =>
             res
-                .location(req.baseUrl + '/' + String(id))
+                .location(req.baseUrl + '/' + String(settings.id))
                 .status(201)
-                .send()
+                .send({ message: 'Created', settings: settings })
         )
         .finally(next)
 })
@@ -28,26 +34,49 @@ router
     .get(auth, sameOrganization, (req, res, next) => {
         controller
             .getSettings(parseInt(req.params.id))
-            .then((configuration) => res.status(200).send(configuration))
+            .then((settings) => {
+                settings === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(200).send({ message: 'Found', settings: settings })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .put(auth, role(['admin', 'manager', 'rrhh']), sameOrganization, (req, res, next) => {
+        const marginHours = req.body.marginHours
+        const allowModifyPunchIn = req.body.allowModifyPunchIn
+        const allowInsertPastPunchIn = req.body.allowInsertPastPunchIn
+
+        marginHours !== undefined &&
+            !val.isDate(marginHours) &&
+            res.status(400).send({ message: 'Invalid marginHours' })
+        allowModifyPunchIn !== undefined &&
+            !val.isBoolean(allowModifyPunchIn) &&
+            res.status(400).send({ message: 'Invalid allowModifyPunchIn' })
+        allowInsertPastPunchIn !== undefined &&
+            !val.isBoolean(allowInsertPastPunchIn) &&
+            res.status(400).send({ message: 'Invalid allowInsertPastPunchIn' })
+
         controller
             .updateSettings(
                 parseInt(req.params.id),
-                req.body.marginHours ? req.body.marginHours : undefined,
-                req.body.allowModifyPunchIn !== undefined ? req.body.allowModifyPunchIn : undefined,
-                req.body.allowInsertPastPunchIn !== undefined ? req.body.allowInsertPastPunchIn : undefined
+                marginHours ? marginHours : undefined,
+                allowModifyPunchIn !== undefined ? allowModifyPunchIn : undefined,
+                allowInsertPastPunchIn !== undefined ? allowInsertPastPunchIn : undefined
             )
-            .then(() => res.status(201).send())
+            .then((settings) => {
+                settings === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(200).send({ message: 'Updated', settings: settings })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })
     .delete(auth, role(['admin']), (req, res, next) => {
         controller
             .deleteSettings(parseInt(req.params.id))
-            .then(() => res.status(200).send())
+            .then((settings) => {
+                settings === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(200).send({ message: 'Deleted' })
+            })
             .catch(() => res.status(404).send())
             .finally(next)
     })

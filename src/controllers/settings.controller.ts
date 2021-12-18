@@ -5,7 +5,7 @@ async function createSettings(
     allowModifyPunchIn: boolean,
     allowInsertPastPunchIn: boolean,
     organizationId: number
-): Promise<number> {
+): Promise<any> {
     let settings = await Settings.create({
         marginHours: marginHours,
         allowModifyPunchIn: allowModifyPunchIn,
@@ -13,12 +13,12 @@ async function createSettings(
         organizationId: organizationId,
     })
 
-    return settings.id
+    return settings
 }
 
 async function getSettings(id: number): Promise<any> {
     let settings = await Settings.findAll({ where: { organizationId: id } })
-    if (!settings) throw Error('404')
+    if (settings === null) return 404
 
     return settings[0]
 }
@@ -28,9 +28,9 @@ async function updateSettings(
     marginHours: number,
     allowModifyPunchIn: boolean,
     allowInsertPastPunchIn: boolean
-): Promise<void> {
+): Promise<any> {
     let settings = await Settings.findByPk(id)
-    if (!settings) throw Error('404')
+    if (settings === null) return 404
 
     const configUpdated = {
         marginHours: marginHours !== undefined ? marginHours : settings.marginHours,
@@ -39,14 +39,17 @@ async function updateSettings(
             allowInsertPastPunchIn !== undefined ? allowInsertPastPunchIn : settings.allowInsertPastPunchIn,
     }
 
-    await settings.update(configUpdated)
+    settings = await settings.update(configUpdated)
+    if (settings === null) return 404
+    return settings
 }
 
-async function deleteSettings(id: number): Promise<void> {
+async function deleteSettings(id: number): Promise<any> {
     let settings = await Settings.findAll({ where: { organizationId: id } })[0]
-    if (!settings) throw Error('404')
+    if (settings === null) return 404
 
-    await settings.destroy()
+    const deleted = await settings.destroy()
+    return deleted
 }
 
 export default {

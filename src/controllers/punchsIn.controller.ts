@@ -6,19 +6,19 @@ async function getPunchsIn(): Promise<any[]> {
     })
 }
 
-async function createPunchIn(start: Date, end: Date, user: number): Promise<number> {
+async function createPunchIn(start: Date, end: Date, user: number): Promise<any> {
     let punchIn = await PunchIn.create({
         start: start,
         end: end,
         userId: user,
     })
 
-    return punchIn.id
+    return punchIn
 }
 
 async function getPunchIn(id: number): Promise<any> {
     let punchIn = await PunchIn.findByPk(id)
-    if (!punchIn) throw Error('404')
+    if (punchIn === null) return 404
 
     return punchIn
 }
@@ -28,9 +28,9 @@ async function updatePunchIn(
     start: Date | undefined,
     end: Date | undefined,
     user: number | undefined
-): Promise<void> {
+): Promise<any> {
     let punchIn = await PunchIn.findByPk(id)
-    if (!punchIn) throw Error('404')
+    if (punchIn === null) return 404
 
     const punchInUpdated = {
         start: start !== undefined ? start : punchIn.start,
@@ -38,14 +38,17 @@ async function updatePunchIn(
         user: user !== undefined ? user : punchIn.user,
     }
 
-    await punchIn.update(punchInUpdated)
+    punchIn = await punchIn.update(punchInUpdated)
+    if (punchIn === null) return 404
+    return punchIn
 }
 
-async function deletePunchIn(id: number): Promise<void> {
+async function deletePunchIn(id: number): Promise<any> {
     let punchIn = await PunchIn.findByPk(id)
-    if (!punchIn) throw Error('404')
+    if (punchIn === null) return 404
 
-    await punchIn.destroy()
+    const deleted = await punchIn.destroy()
+    return deleted
 }
 
 export default {

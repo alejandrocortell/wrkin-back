@@ -6,31 +6,34 @@ async function getOrganizations(): Promise<any[]> {
     })
 }
 
-async function createOrganization(name: string): Promise<number> {
+async function createOrganization(name: string): Promise<any> {
     let organization = await Organization.create({ name: name })
-
-    return organization.id
-}
-
-async function getOrganization(id: number): Promise<any> {
-    let organization = await Organization.findByPk(id)
-    if (!organization) throw Error('404')
 
     return organization
 }
 
-async function updateOrganization(id: number, name: string): Promise<void> {
+async function getOrganization(id: number): Promise<any> {
     let organization = await Organization.findByPk(id)
-    if (!organization) throw Error('404')
+    if (organization === null) return 404
 
-    await organization.update({ name: name })
+    return organization
 }
 
-async function deleteOrganization(id: number): Promise<void> {
+async function updateOrganization(id: number, name: string): Promise<any> {
     let organization = await Organization.findByPk(id)
-    if (!organization) throw Error('404')
+    if (organization === null) return 404
 
-    await organization.destroy()
+    organization = await organization.update({ name: name })
+    if (organization === null) return 404
+    return organization
+}
+
+async function deleteOrganization(id: number): Promise<any> {
+    let organization = await Organization.findByPk(id)
+    if (organization === null) return 404
+
+    const deleted = await organization.destroy()
+    return deleted
 }
 
 async function getUsers(id: number): Promise<User[]> {

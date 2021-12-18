@@ -16,7 +16,7 @@ async function createUser(
     zipcode: string,
     city: string,
     hoursToWork: number
-): Promise<number> {
+): Promise<any> {
     let newUser = await User.create({
         user: user,
         password: password,
@@ -29,12 +29,12 @@ async function createUser(
         hoursToWork: hoursToWork,
     })
 
-    return newUser.id
+    return newUser
 }
 
 async function getUser(id: number): Promise<any> {
     let user = await User.findByPk(id)
-    if (!user) throw Error('404')
+    if (user === null) return 404
 
     return user
 }
@@ -50,9 +50,9 @@ async function updateUser(
     zipcode: string | undefined,
     city: string | undefined,
     hoursToWork: number | undefined
-): Promise<void> {
+): Promise<any> {
     let foundUser = await User.findByPk(id)
-    if (!foundUser) throw Error('404')
+    if (foundUser === null) return 404
 
     const userUpdated = {
         user: user !== undefined ? user : foundUser.user,
@@ -66,14 +66,17 @@ async function updateUser(
         hoursToWork: hoursToWork !== undefined ? hoursToWork : foundUser.hoursToWork,
     }
 
-    await foundUser.update(userUpdated)
+    foundUser = await foundUser.update(userUpdated)
+    if (foundUser === null) return 404
+    return foundUser
 }
 
-async function deleteUser(id: number): Promise<void> {
+async function deleteUser(id: number): Promise<any> {
     let user = await User.findByPk(id)
-    if (!user) throw Error('404')
+    if (user === null) return 404
 
-    await user.destroy()
+    const deleted = await user.destroy()
+    return deleted
 }
 
 async function getPunchIns(id: number): Promise<PunchIn[]> {

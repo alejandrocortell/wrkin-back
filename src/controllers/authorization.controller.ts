@@ -20,7 +20,7 @@ async function getToken(req, res): Promise<void> {
             id: user[0].id,
         }
         const token = jwt.sign(payload, key, {
-            expiresIn: 1440,
+            expiresIn: '30d',
         })
         return res.json({
             message: 'Correct authorization',

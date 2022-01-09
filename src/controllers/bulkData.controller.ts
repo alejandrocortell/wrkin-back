@@ -11,7 +11,11 @@ import {
     StatusRequest,
     User,
 } from '../database/models'
-import { generateBirthday, generatePunchIn, randomNumber } from './../utils/utils'
+import {
+    generateBirthday,
+    generatePunchIn,
+    randomNumber,
+} from './../utils/utils'
 import { encode } from './../utils/cryptoJS'
 
 async function destroyData(): Promise<any> {
@@ -36,10 +40,22 @@ async function bulkData(): Promise<any[]> {
 
 async function daysOffTypes(): Promise<any[]> {
     return await DayOffType.bulkCreate([
-        { dayOffType: 'holydays', createdAt: new Date(), updatedAt: new Date() },
+        {
+            dayOffType: 'holydays',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
         { dayOffType: 'day off', createdAt: new Date(), updatedAt: new Date() },
-        { dayOffType: 'formation', createdAt: new Date(), updatedAt: new Date() },
-        { dayOffType: 'official exam', createdAt: new Date(), updatedAt: new Date() },
+        {
+            dayOffType: 'formation',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+        {
+            dayOffType: 'official exam',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
         { dayOffType: 'other', createdAt: new Date(), updatedAt: new Date() },
     ])
 }
@@ -92,9 +108,21 @@ async function roles(): Promise<any[]> {
 
 async function statusRequests(): Promise<any[]> {
     return await StatusRequest.bulkCreate([
-        { statusRequest: 'approved', createdAt: new Date(), updatedAt: new Date() },
-        { statusRequest: 'dennied', createdAt: new Date(), updatedAt: new Date() },
-        { statusRequest: 'waiting', createdAt: new Date(), updatedAt: new Date() },
+        {
+            statusRequest: 'approved',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+        {
+            statusRequest: 'dennied',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+        {
+            statusRequest: 'waiting',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
     ])
 }
 
@@ -124,7 +152,7 @@ async function users(): Promise<any[]> {
     }
     usersData.push({
         user: 'alejandro',
-        password: encode('123456'),
+        password: encode('123456aA?'),
         roleId: 5,
         managerId: 4,
         firstName: faker.name.firstName(),
@@ -146,7 +174,9 @@ async function punchIns(): Promise<any[]> {
     for (let i = 1; i < 7; i++) {
         // Past last 100 days
         for (let z = 0; z < 100; z++) {
-            const dayTarget = new Date(new Date().setDate(new Date().getDate() - z))
+            const dayTarget = new Date(
+                new Date().setDate(new Date().getDate() - z)
+            )
             const journey = generatePunchIn(dayTarget)
             journey.forEach((element) => {
                 punchInsData.push({
@@ -168,15 +198,22 @@ async function requestDayOff(): Promise<any[]> {
     for (let i = 1; i < 7; i++) {
         for (let z = 0; z < 20; z++) {
             const randomDay = randomNumber(-30, 30)
-            const dayStart = new Date(new Date().setDate(new Date().getDate() + randomDay))
-            const dayEnd = new Date(new Date().setDate(new Date().getDate() + (randomDay + randomNumber(1, 6))))
+            const dayStart = new Date(
+                new Date().setDate(new Date().getDate() + randomDay)
+            )
+            const dayEnd = new Date(
+                new Date().setDate(
+                    new Date().getDate() + (randomDay + randomNumber(1, 6))
+                )
+            )
             requestDaysOffData.push({
                 message: faker.lorem.paragraph(3),
                 start: dayStart,
                 end: dayEnd,
                 userId: i,
                 dayOffTypeId: randomNumber(1, 5),
-                statusRequestId: randomDay > 0 ? randomNumber(1, 3) : randomNumber(1, 2),
+                statusRequestId:
+                    randomDay > 0 ? randomNumber(1, 3) : randomNumber(1, 2),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             })

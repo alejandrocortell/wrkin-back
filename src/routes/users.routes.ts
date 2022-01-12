@@ -47,6 +47,24 @@ router
     })
 
 router
+    .route('/me')
+    .get(
+        auth,
+        (req, res, next) => {
+            controller
+                // @ts-ignore
+                .getUser(req.decoded.id)
+                .then((user) => {
+                    user === 404 &&
+                        res.status(404).send({ message: 'Not found' })
+                    res.status(200).send({ message: 'Found', user: user })
+                })
+                .catch(() => res.status(404).send())
+                .finally(next)
+        }
+    )
+
+router
     .route('/:id(\\d+)')
     .get(auth, role(['admin', 'manager', 'rrhh', 'coordinator', 'employee']), sameUser, (req, res, next) => {
         controller

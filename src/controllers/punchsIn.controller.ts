@@ -6,10 +6,14 @@ async function getPunchsIn(): Promise<any[]> {
     })
 }
 
-async function createPunchIn(start: Date, end: Date, user: number): Promise<any> {
+async function createPunchIn(
+    start: Date,
+    end: Date | undefined,
+    user: number
+): Promise<any> {
     let punchIn = await PunchIn.create({
         start: start,
-        end: end,
+        end: end === undefined ? null : end,
         userId: user,
     })
 

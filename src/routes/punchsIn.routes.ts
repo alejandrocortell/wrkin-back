@@ -18,9 +18,10 @@ router
     .post(auth, (req: IExtendRequest, res, next) => {
         const start = req.body.start
         const end = req.body.end
-
         !val.isDate(start) && res.status(400).send({ message: 'Invalid start' })
-        !val.isDate(end) && res.status(400).send({ message: 'Invalid end' })
+        if (end !== undefined && !val.isDate(end)) {
+            res.status(400).send({ message: 'Invalid end' })
+        }
 
         controller
             .createPunchIn(start, end, req.decoded.id)
@@ -56,7 +57,10 @@ router
             .updatePunchIn(parseInt(req.params.id), start ? start : undefined, end ? end : undefined, req.decoded.id)
             .then((punchIn) => {
                 punchIn === 404 && res.status(404).send({ message: 'Not found' })
-                res.status(200).send({ message: 'Updated', punchIn: punchIn })
+                res.status(200).send({
+                    message: 'Updated',
+                    punchIn: punchIn,
+                })
             })
             .catch(() => res.status(404).send())
             .finally(next)

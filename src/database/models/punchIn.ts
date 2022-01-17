@@ -27,7 +27,7 @@ class PunchIn extends Model {
                 },
                 end: {
                     type: DataTypes.DATE,
-                    allowNull: false,
+                    allowNull: true,
                 },
             },
             {

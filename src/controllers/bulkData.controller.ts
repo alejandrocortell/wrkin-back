@@ -11,11 +11,7 @@ import {
     StatusRequest,
     User,
 } from '../database/models'
-import {
-    generateBirthday,
-    generatePunchIn,
-    randomNumber,
-} from './../utils/utils'
+import { generateBirthday, generatePunchIn, randomNumber } from './../utils/utils'
 import { encode } from './../utils/cryptoJS'
 
 async function destroyData(): Promise<any> {
@@ -170,19 +166,18 @@ async function users(): Promise<any[]> {
 
 async function punchIns(): Promise<any[]> {
     let punchInsData = []
-    // Six first employees
-    for (let i = 1; i < 7; i++) {
+    // Last 6 employees
+    for (let i = 15; i <= 21; i++) {
         // Past last 100 days
         for (let z = 0; z < 100; z++) {
-            const dayTarget = new Date(
-                new Date().setDate(new Date().getDate() - z)
-            )
+            const dayTarget = new Date(new Date().setDate(new Date().getDate() - z))
             const journey = generatePunchIn(dayTarget)
             journey.forEach((element) => {
                 punchInsData.push({
                     start: element[0],
                     end: element[1],
                     userId: i,
+                    organizationId: randomNumber(1, 2),
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 })
@@ -194,26 +189,20 @@ async function punchIns(): Promise<any[]> {
 
 async function requestDayOff(): Promise<any[]> {
     let requestDaysOffData = []
-    // Six first employees
-    for (let i = 1; i < 7; i++) {
+    // Last 6 employees
+    for (let i = 15; i <= 21; i++) {
         for (let z = 0; z < 20; z++) {
             const randomDay = randomNumber(-30, 30)
-            const dayStart = new Date(
-                new Date().setDate(new Date().getDate() + randomDay)
-            )
-            const dayEnd = new Date(
-                new Date().setDate(
-                    new Date().getDate() + (randomDay + randomNumber(1, 6))
-                )
-            )
+            const dayStart = new Date(new Date().setDate(new Date().getDate() + randomDay))
+            const dayEnd = new Date(new Date().setDate(new Date().getDate() + (randomDay + randomNumber(1, 6))))
             requestDaysOffData.push({
                 message: faker.lorem.paragraph(3),
                 start: dayStart,
                 end: dayEnd,
                 userId: i,
+                organizationId: randomNumber(1, 2),
                 dayOffTypeId: randomNumber(1, 5),
-                statusRequestId:
-                    randomDay > 0 ? randomNumber(1, 3) : randomNumber(1, 2),
+                statusRequestId: randomDay > 0 ? randomNumber(1, 3) : randomNumber(1, 2),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             })
@@ -230,9 +219,15 @@ async function userToOrganization(): Promise<any[]> {
     await users.forEach((u) => {
         u.addOrganization(1)
     })
+
+    // Add users to the second organization
+    await users.forEach((u) => {
+        u.addOrganization(2)
+    })
+
     // Add users to another random organization
     await users.forEach((u) => {
-        u.addOrganization(randomNumber(2, organizations.length - 1))
+        u.addOrganization(randomNumber(3, organizations.length - 1))
     })
     return
 }

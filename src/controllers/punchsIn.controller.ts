@@ -6,15 +6,12 @@ async function getPunchsIn(): Promise<any[]> {
     })
 }
 
-async function createPunchIn(
-    start: Date,
-    end: Date | undefined,
-    user: number
-): Promise<any> {
+async function createPunchIn(start: Date, end: Date | undefined, user: number, organization: number): Promise<any> {
     let punchIn = await PunchIn.create({
         start: start,
         end: end === undefined ? null : end,
         userId: user,
+        organizationId: organization,
     })
 
     return punchIn
@@ -31,7 +28,8 @@ async function updatePunchIn(
     id: number,
     start: Date | undefined,
     end: Date | undefined,
-    user: number | undefined
+    user: number | undefined,
+    organization: number | undefined
 ): Promise<any> {
     let punchIn = await PunchIn.findByPk(id)
     if (punchIn === null) return 404
@@ -40,6 +38,7 @@ async function updatePunchIn(
         start: start !== undefined ? start : punchIn.start,
         end: end !== undefined ? end : punchIn.end,
         user: user !== undefined ? user : punchIn.user,
+        organizationId: organization !== undefined ? organization : punchIn.organization,
     }
 
     punchIn = await punchIn.update(punchInUpdated)

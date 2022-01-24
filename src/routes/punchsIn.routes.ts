@@ -18,13 +18,16 @@ router
     .post(auth, (req: IExtendRequest, res, next) => {
         const start = req.body.start
         const end = req.body.end
+        const organization = req.body.organization
+
         !val.isDate(start) && res.status(400).send({ message: 'Invalid start' })
+        !val.isNumber(organization) && res.status(400).send({ message: 'Invalid organization' })
         if (end !== undefined && !val.isDate(end)) {
             res.status(400).send({ message: 'Invalid end' })
         }
 
         controller
-            .createPunchIn(start, end, req.decoded.id)
+            .createPunchIn(start, end, req.decoded.id, organization)
             .then((punchIn) =>
                 res
                     .location(req.baseUrl + '/' + String(punchIn.id))
@@ -49,12 +52,22 @@ router
     .put(auth, role(['admin', 'manager', 'coordinator', 'employee']), createdBy, (req: IExtendRequest, res, next) => {
         const start = req.body.start
         const end = req.body.end
+        const organization = req.body.organization
 
         start !== undefined && !val.isDate(start) && res.status(400).send({ message: 'Invalid start' })
         end !== undefined && !val.isDate(end) && res.status(400).send({ message: 'Invalid end' })
+        organization !== undefined &&
+            !val.isNumber(organization) &&
+            res.status(400).send({ message: 'Invalid organization' })
 
         controller
-            .updatePunchIn(parseInt(req.params.id), start ? start : undefined, end ? end : undefined, req.decoded.id)
+            .updatePunchIn(
+                parseInt(req.params.id),
+                start ? start : undefined,
+                end ? end : undefined,
+                req.decoded.id,
+                organization ? organization : undefined
+            )
             .then((punchIn) => {
                 punchIn === 404 && res.status(404).send({ message: 'Not found' })
                 res.status(200).send({

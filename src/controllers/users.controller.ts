@@ -1,4 +1,10 @@
-import { PunchIn, RequestDayOff, User, Document } from '../database/models'
+import {
+    PunchIn,
+    RequestDayOff,
+    User,
+    Document,
+    Organization,
+} from '../database/models'
 
 async function getUsers(): Promise<any[]> {
     return await User.findAll({
@@ -34,9 +40,20 @@ async function createUser(
 
 async function getUser(id: number): Promise<any> {
     let user = await User.findByPk(id)
+    let organizations = await Organization.findAll({
+        include: [
+            {
+                model: User,
+                where: { id: id },
+                required: true,
+                attributes: [],
+            },
+        ],
+    })
     if (user === null) return 404
 
-    return user
+    const response = { ...user.get(), organizations: organizations }
+    return response
 }
 
 async function updateUser(
@@ -63,7 +80,8 @@ async function updateUser(
         address: address !== undefined ? address : foundUser.address,
         zipcode: zipcode !== undefined ? zipcode : foundUser.zipcode,
         city: city !== undefined ? city : foundUser.city,
-        hoursToWork: hoursToWork !== undefined ? hoursToWork : foundUser.hoursToWork,
+        hoursToWork:
+            hoursToWork !== undefined ? hoursToWork : foundUser.hoursToWork,
     }
 
     foundUser = await foundUser.update(userUpdated)

@@ -1,4 +1,5 @@
 import { Association, DataTypes, Model, Sequelize } from 'sequelize'
+import { Organization } from '.'
 
 import User from './user'
 
@@ -13,9 +14,11 @@ class PunchIn extends Model {
 
     // Populated for inclusions
     public readonly user: User
+    public readonly organization: Organization
 
     public static associations: {
         user: Association<PunchIn, User>
+        organization: Association<PunchIn, Organization>
     }
 
     public static initialize(sequelize: Sequelize) {

@@ -20,14 +20,16 @@ router
         const start = req.body.start
         const end = req.body.end
         const dayOffType = req.body.dayOffType
+        const organization = req.body.organization
 
         !val.isString(message) && res.status(400).send({ message: 'Invalid message' })
         !val.isDate(start) && res.status(400).send({ message: 'Invalid start' })
         !val.isDate(end) && res.status(400).send({ message: 'Invalid end' })
         !val.isNumber(dayOffType) && res.status(400).send({ message: 'Invalid dayOffType' })
+        !val.isNumber(organization) && res.status(400).send({ message: 'Invalid organization' })
 
         controller
-            .createRequestDayOff(message, start, end, req.decoded.id, dayOffType)
+            .createRequestDayOff(message, start, end, req.decoded.id, dayOffType, organization)
             .then((requestDayOff) =>
                 res
                     .location(req.baseUrl + '/' + String(requestDayOff.id))
@@ -55,6 +57,7 @@ router
         const end = req.body.end
         const dayOffType = req.body.dayOffType
         const statusRequest = req.body.statusRequest
+        const organization = req.body.organization
 
         message !== undefined && !val.isString(message) && res.status(400).send({ message: 'Invalid message' })
         start !== undefined && !val.isDate(start) && res.status(400).send({ message: 'Invalid start' })
@@ -63,6 +66,9 @@ router
         statusRequest !== undefined &&
             !val.isNumber(statusRequest) &&
             res.status(400).send({ message: 'Invalid statusRequest' })
+        organization !== undefined &&
+            !val.isNumber(organization) &&
+            res.status(400).send({ message: 'Invalid organization' })
 
         controller
             .updateRequestDayOff(
@@ -72,7 +78,8 @@ router
                 end ? end : undefined,
                 req.decoded.id,
                 dayOffType ? dayOffType : undefined,
-                statusRequest ? statusRequest : undefined
+                statusRequest ? statusRequest : undefined,
+                organization ? organization : undefined
             )
             .then((requestDayOff) => {
                 requestDayOff === 404 && res.status(404).send({ message: 'Not found' })

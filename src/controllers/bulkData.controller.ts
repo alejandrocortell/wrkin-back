@@ -57,6 +57,11 @@ async function daysOffTypes(): Promise<any[]> {
             createdAt: new Date(),
             updatedAt: new Date(),
         },
+        {
+            dayOffType: 'sick leave',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
         { dayOffType: 'other', createdAt: new Date(), updatedAt: new Date() },
     ])
 }
@@ -196,14 +201,14 @@ async function requestDayOff(): Promise<any[]> {
     let requestDaysOffData = []
     // Last 6 employees
     for (let i = 15; i <= 21; i++) {
-        for (let z = 0; z < 20; z++) {
-            const randomDay = randomNumber(-30, 30)
+        for (let z = 0; z < 10; z++) {
+            const randomDay = randomNumber(-100, 30)
             const dayStart = new Date(
                 new Date().setDate(new Date().getDate() + randomDay)
             )
             const dayEnd = new Date(
                 new Date().setDate(
-                    new Date().getDate() + (randomDay + randomNumber(1, 6))
+                    new Date().getDate() + (randomDay + randomNumber(0, 6))
                 )
             )
             requestDaysOffData.push({

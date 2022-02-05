@@ -1,4 +1,4 @@
-import { Options, Sequelize } from 'sequelize'
+import { DataTypes, Options, Sequelize } from 'sequelize'
 import Settings from './settings'
 import DayOffType from './dayOffType'
 import Document from './document'
@@ -13,16 +13,21 @@ import User from './user'
 const dbConfig = require('../../config/database')
 
 // Open database connection
-const sequelize = new Sequelize(dbConfig.database as string, dbConfig.username as string, dbConfig.password as string, {
-    host: dbConfig.HOST,
-    dialect: dbConfig.dialect as 'mysql' | 'postgres',
-    pool: {
-        max: dbConfig.pool.max,
-        min: dbConfig.pool.min,
-        acquire: dbConfig.pool.acquire,
-        idle: dbConfig.pool.idle,
-    },
-})
+const sequelize = new Sequelize(
+    dbConfig.database as string,
+    dbConfig.username as string,
+    dbConfig.password as string,
+    {
+        host: dbConfig.HOST,
+        dialect: dbConfig.dialect as 'mysql' | 'postgres',
+        pool: {
+            max: dbConfig.pool.max,
+            min: dbConfig.pool.min,
+            acquire: dbConfig.pool.acquire,
+            idle: dbConfig.pool.idle,
+        },
+    }
+)
 
 // Initialize each model in the database
 // This must be done before associations are made
@@ -40,23 +45,78 @@ let models = [
 ]
 models.forEach((model) => model.initialize(sequelize))
 
-Settings.belongsTo(Organization, { as: 'organization', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+Settings.belongsTo(Organization, {
+    as: 'organization',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
 
-PunchIn.belongsTo(User, { as: 'user', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
-PunchIn.belongsTo(Organization, { as: 'organization', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+PunchIn.belongsTo(User, {
+    as: 'user',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
+PunchIn.belongsTo(Organization, {
+    as: 'organization',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
 
-Document.belongsTo(DocumentType, { as: 'documentType', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
-Document.belongsTo(Organization, { as: 'organization', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
-Document.belongsTo(User, { as: 'user', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+Document.belongsTo(DocumentType, {
+    as: 'documentType',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
+Document.belongsTo(Organization, {
+    as: 'organization',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
+Document.belongsTo(User, {
+    as: 'user',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
 
-RequestDayOff.belongsTo(DayOffType, { as: 'dayOffType', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
-RequestDayOff.belongsTo(User, { as: 'user', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
-RequestDayOff.belongsTo(StatusRequest, { as: 'statusRequest', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
-RequestDayOff.belongsTo(Organization, { as: 'organization', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+RequestDayOff.belongsTo(DayOffType, {
+    as: 'dayOffType',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
+RequestDayOff.belongsTo(User, {
+    as: 'user',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
+RequestDayOff.belongsTo(StatusRequest, {
+    as: 'statusRequest',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
+RequestDayOff.belongsTo(Organization, {
+    as: 'organization',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
 
-User.belongsTo(Role, { as: 'role', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
-User.belongsTo(User, { as: 'manager', foreignKey: { allowNull: false }, onDelete: 'CASCADE' })
+User.belongsTo(Role, {
+    as: 'role',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
+User.belongsTo(User, {
+    as: 'manager',
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
 
+const User_Organization = sequelize.define(
+    'User_Organization',
+    {
+        hoursToWork: DataTypes.INTEGER,
+    },
+    { timestamps: false }
+)
 User.belongsToMany(Organization, { through: 'User_Organization' })
 Organization.belongsToMany(User, { through: 'User_Organization' })
 
@@ -77,4 +137,5 @@ export {
     Role,
     StatusRequest,
     User,
+    User_Organization,
 }

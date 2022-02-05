@@ -8,7 +8,7 @@ import router from './src/routes'
 
 const server = express()
 
-const allowedOrigins = ['http://localhost:3000']
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001']
 
 server.use(
     cors({

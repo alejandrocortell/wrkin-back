@@ -10,8 +10,13 @@ import {
     Settings,
     StatusRequest,
     User,
+    User_Organization,
 } from '../database/models'
-import { generateBirthday, generatePunchIn, randomNumber } from './../utils/utils'
+import {
+    generateBirthday,
+    generatePunchIn,
+    randomNumber,
+} from './../utils/utils'
 import { encode } from './../utils/cryptoJS'
 
 async function destroyData(): Promise<any> {
@@ -28,7 +33,7 @@ async function bulkData(): Promise<any[]> {
         roles(),
         statusRequests(),
         users(),
-        punchIns(),
+        // punchIns(),
         requestDayOff(),
         userToOrganization(),
     ])
@@ -141,7 +146,7 @@ async function users(): Promise<any[]> {
             address: faker.address.streetName(),
             zipcode: faker.address.zipCode(),
             city: faker.address.city(),
-            hoursToWork: randomNumber(8, 40),
+            // hoursToWork: randomNumber(8, 40),
             createdAt: new Date(),
             updatedAt: new Date(),
         })
@@ -157,7 +162,7 @@ async function users(): Promise<any[]> {
         address: faker.address.streetName(),
         zipcode: faker.address.zipCode(),
         city: faker.address.city(),
-        hoursToWork: randomNumber(8, 40),
+        // hoursToWork: randomNumber(8, 40),
         createdAt: new Date(),
         updatedAt: new Date(),
     })
@@ -170,7 +175,9 @@ async function punchIns(): Promise<any[]> {
     for (let i = 15; i <= 21; i++) {
         // Past last 100 days
         for (let z = 0; z < 100; z++) {
-            const dayTarget = new Date(new Date().setDate(new Date().getDate() - z))
+            const dayTarget = new Date(
+                new Date().setDate(new Date().getDate() - z)
+            )
             const journey = generatePunchIn(dayTarget)
             journey.forEach((element) => {
                 punchInsData.push({
@@ -193,8 +200,14 @@ async function requestDayOff(): Promise<any[]> {
     for (let i = 15; i <= 21; i++) {
         for (let z = 0; z < 20; z++) {
             const randomDay = randomNumber(-30, 30)
-            const dayStart = new Date(new Date().setDate(new Date().getDate() + randomDay))
-            const dayEnd = new Date(new Date().setDate(new Date().getDate() + (randomDay + randomNumber(1, 6))))
+            const dayStart = new Date(
+                new Date().setDate(new Date().getDate() + randomDay)
+            )
+            const dayEnd = new Date(
+                new Date().setDate(
+                    new Date().getDate() + (randomDay + randomNumber(1, 6))
+                )
+            )
             requestDaysOffData.push({
                 message: faker.lorem.paragraph(3),
                 start: dayStart,
@@ -202,7 +215,8 @@ async function requestDayOff(): Promise<any[]> {
                 userId: i,
                 organizationId: randomNumber(1, 2),
                 dayOffTypeId: randomNumber(1, 5),
-                statusRequestId: randomDay > 0 ? randomNumber(1, 3) : randomNumber(1, 2),
+                statusRequestId:
+                    randomDay > 0 ? randomNumber(1, 3) : randomNumber(1, 2),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             })
@@ -212,24 +226,28 @@ async function requestDayOff(): Promise<any[]> {
 }
 
 async function userToOrganization(): Promise<any[]> {
+    let insertData = []
     const users = await User.findAll()
     const organizations = await Organization.findAll()
 
-    // Add users to the first organization
     await users.forEach((u) => {
-        u.addOrganization(1)
+        insertData.push({
+            hoursToWork: randomNumber(7, 8),
+            UserId: u.id,
+            OrganizationId: 1,
+        })
     })
 
-    // Add users to the second organization
-    await users.forEach((u) => {
-        u.addOrganization(2)
+    await organizations.forEach((u) => {
+        if (u.id === 1) return
+        insertData.push({
+            hoursToWork: randomNumber(7, 8),
+            UserId: randomNumber(1, 21),
+            OrganizationId: u.id,
+        })
     })
 
-    // Add users to another random organization
-    await users.forEach((u) => {
-        u.addOrganization(randomNumber(3, organizations.length - 1))
-    })
-    return
+    return User_Organization.bulkCreate(insertData)
 }
 
 export default {

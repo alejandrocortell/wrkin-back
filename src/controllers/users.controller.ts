@@ -20,8 +20,8 @@ async function createUser(
     birthday: string,
     address: string,
     zipcode: string,
-    city: string,
-    hoursToWork: number
+    city: string
+    // hoursToWork: number
 ): Promise<any> {
     let newUser = await User.create({
         user: user,
@@ -32,7 +32,6 @@ async function createUser(
         address: address,
         zipcode: zipcode,
         city: city,
-        hoursToWork: hoursToWork,
     })
 
     return newUser
@@ -65,8 +64,7 @@ async function updateUser(
     birthday: string | undefined,
     address: string | undefined,
     zipcode: string | undefined,
-    city: string | undefined,
-    hoursToWork: number | undefined
+    city: string | undefined
 ): Promise<any> {
     let foundUser = await User.findByPk(id)
     if (foundUser === null) return 404
@@ -80,8 +78,6 @@ async function updateUser(
         address: address !== undefined ? address : foundUser.address,
         zipcode: zipcode !== undefined ? zipcode : foundUser.zipcode,
         city: city !== undefined ? city : foundUser.city,
-        hoursToWork:
-            hoursToWork !== undefined ? hoursToWork : foundUser.hoursToWork,
     }
 
     foundUser = await foundUser.update(userUpdated)

@@ -4,6 +4,7 @@ import {
     User,
     Document,
     Organization,
+    User_Organization,
 } from '../database/models'
 
 async function getUsers(): Promise<any[]> {
@@ -38,20 +39,33 @@ async function createUser(
 }
 
 async function getUser(id: number): Promise<any> {
-    let user = await User.findByPk(id)
-    let organizations = await Organization.findAll({
-        include: [
-            {
-                model: User,
-                where: { id: id },
-                required: true,
-                attributes: [],
-            },
-        ],
-    })
+    const user = await User.findByPk(id)
     if (user === null) return 404
 
-    const response = { ...user.get(), organizations: organizations }
+    const userOrganization = await User_Organization.findAll({
+        where: {
+            UserId: id,
+        },
+    })
+
+    const organizations = await Organization.findAll()
+
+    const orgs = userOrganization.map((o) => {
+        return {
+            // @ts-ignore
+            organizationId: o.OrganizationId,
+            organizationName: organizations.find(
+                // @ts-ignore
+                (f) => f.id === o.OrganizationId
+            ).name,
+            // @ts-ignore
+            hoursToWork: o.hoursToWork,
+        }
+    })
+
+    console.log(orgs)
+
+    const response = { ...user.get(), organizations: orgs }
     return response
 }
 

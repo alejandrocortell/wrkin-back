@@ -33,7 +33,7 @@ async function bulkData(): Promise<any[]> {
         roles(),
         statusRequests(),
         users(),
-        // punchIns(),
+        punchIns(),
         requestDayOff(),
         userToOrganization(),
     ])
@@ -146,7 +146,6 @@ async function users(): Promise<any[]> {
             address: faker.address.streetName(),
             zipcode: faker.address.zipCode(),
             city: faker.address.city(),
-            // hoursToWork: randomNumber(8, 40),
             createdAt: new Date(),
             updatedAt: new Date(),
         })
@@ -162,7 +161,6 @@ async function users(): Promise<any[]> {
         address: faker.address.streetName(),
         zipcode: faker.address.zipCode(),
         city: faker.address.city(),
-        // hoursToWork: randomNumber(8, 40),
         createdAt: new Date(),
         updatedAt: new Date(),
     })
@@ -174,7 +172,7 @@ async function punchIns(): Promise<any[]> {
     // Last 6 employees
     for (let i = 15; i <= 21; i++) {
         // Past last 100 days
-        for (let z = 0; z < 100; z++) {
+        for (let z = 0; z < 30; z++) {
             const dayTarget = new Date(
                 new Date().setDate(new Date().getDate() - z)
             )
@@ -245,6 +243,12 @@ async function userToOrganization(): Promise<any[]> {
             UserId: randomNumber(1, 21),
             OrganizationId: u.id,
         })
+    })
+
+    insertData.push({
+        hoursToWork: randomNumber(7, 8),
+        UserId: 21,
+        OrganizationId: 2,
     })
 
     return User_Organization.bulkCreate(insertData)

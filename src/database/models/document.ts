@@ -15,12 +15,10 @@ class Document extends Model {
     public updatedAt!: Date
 
     // Populated for inclusions
-    public readonly organization: Organization[]
     public readonly user?: User[]
     public readonly documentType: DocumentType[]
 
     public static associations: {
-        organization: Association<Document, Organization>
         user: Association<Document, User>
         documentType: Association<Document, DocumentType>
     }

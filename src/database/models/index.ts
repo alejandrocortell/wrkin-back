@@ -1,4 +1,4 @@
-import { DataTypes, Options, Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize'
 import Settings from './settings'
 import DayOffType from './dayOffType'
 import Document from './document'
@@ -50,25 +50,13 @@ Settings.belongsTo(Organization, {
     foreignKey: { allowNull: false },
     onDelete: 'CASCADE',
 })
-
 PunchIn.belongsTo(User, {
     as: 'user',
     foreignKey: { allowNull: false },
     onDelete: 'CASCADE',
 })
-PunchIn.belongsTo(Organization, {
-    as: 'organization',
-    foreignKey: { allowNull: false },
-    onDelete: 'CASCADE',
-})
-
 Document.belongsTo(DocumentType, {
     as: 'documentType',
-    foreignKey: { allowNull: false },
-    onDelete: 'CASCADE',
-})
-Document.belongsTo(Organization, {
-    as: 'organization',
     foreignKey: { allowNull: false },
     onDelete: 'CASCADE',
 })
@@ -77,7 +65,6 @@ Document.belongsTo(User, {
     foreignKey: { allowNull: false },
     onDelete: 'CASCADE',
 })
-
 RequestDayOff.belongsTo(DayOffType, {
     as: 'dayOffType',
     foreignKey: { allowNull: false },
@@ -93,12 +80,6 @@ RequestDayOff.belongsTo(StatusRequest, {
     foreignKey: { allowNull: false },
     onDelete: 'CASCADE',
 })
-RequestDayOff.belongsTo(Organization, {
-    as: 'organization',
-    foreignKey: { allowNull: false },
-    onDelete: 'CASCADE',
-})
-
 User.belongsTo(Role, {
     as: 'role',
     foreignKey: { allowNull: false },
@@ -109,16 +90,10 @@ User.belongsTo(User, {
     foreignKey: { allowNull: false },
     onDelete: 'CASCADE',
 })
-
-const User_Organization = sequelize.define(
-    'User_Organization',
-    {
-        hoursToWork: DataTypes.INTEGER,
-    },
-    { timestamps: false }
-)
-User.belongsToMany(Organization, { through: 'User_Organization' })
-Organization.belongsToMany(User, { through: 'User_Organization' })
+User.belongsTo(Organization, {
+    foreignKey: { allowNull: false },
+    onDelete: 'CASCADE',
+})
 
 // Create database tables
 // alter: keep the database
@@ -137,5 +112,4 @@ export {
     Role,
     StatusRequest,
     User,
-    User_Organization,
 }

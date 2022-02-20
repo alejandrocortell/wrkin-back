@@ -3,7 +3,6 @@ import { Association, DataTypes, Model, Sequelize } from 'sequelize'
 import User from './user'
 import DayOffType from './dayOffType'
 import StatusRequest from './statusRequest'
-import { Organization } from '.'
 
 class RequestDayOff extends Model {
     public message!: string
@@ -19,13 +18,11 @@ class RequestDayOff extends Model {
     public readonly user: User[]
     public readonly dayOffType: DayOffType[]
     public readonly statusRequest: StatusRequest[]
-    public readonly organization: Organization
 
     public static associations: {
         user: Association<RequestDayOff, User>
         dayOffType: Association<RequestDayOff, DayOffType>
         statusRequest: Association<RequestDayOff, StatusRequest>
-        organization: Association<RequestDayOff, Organization>
     }
 
     public static initialize(sequelize: Sequelize) {

@@ -1,17 +1,4 @@
-import {
-    Association,
-    DataTypes,
-    Model,
-    Sequelize,
-    BelongsToManyAddAssociationMixin,
-    BelongsToManyAddAssociationsMixin,
-    BelongsToManyGetAssociationsMixin,
-    BelongsToManyHasAssociationMixin,
-    BelongsToManyHasAssociationsMixin,
-    BelongsToManyRemoveAssociationMixin,
-    BelongsToManyRemoveAssociationsMixin,
-    BelongsToManySetAssociationsMixin,
-} from 'sequelize'
+import { Association, DataTypes, Model, Sequelize } from 'sequelize'
 
 import Organization from './organization'
 import Role from './role'
@@ -25,6 +12,8 @@ class User extends Model {
     public address!: string
     public zipcode!: string
     public city!: string
+    public hoursToWork!: number
+    public avatar!: string
 
     // Auto-generated
     public id!: number
@@ -32,39 +21,9 @@ class User extends Model {
     public updatedAt!: Date
 
     // Populated for inclusions
-    public readonly organization: Organization[]
+    public readonly organization: Organization
     public readonly role: Role
     public readonly manager: User
-
-    public addOrganization!: BelongsToManyAddAssociationMixin<
-        Organization,
-        number
-    >
-    public addOrganizations!: BelongsToManyAddAssociationsMixin<
-        Organization,
-        number
-    >
-    public getOrganizations!: BelongsToManyGetAssociationsMixin<Organization>
-    public hasOrganization!: BelongsToManyHasAssociationMixin<
-        Organization,
-        number
-    >
-    public hasOrganizations!: BelongsToManyHasAssociationsMixin<
-        Organization,
-        number
-    >
-    public removeOrganization!: BelongsToManyRemoveAssociationMixin<
-        Organization,
-        number
-    >
-    public removeOrganizations!: BelongsToManyRemoveAssociationsMixin<
-        Organization,
-        number
-    >
-    public setOrganizations!: BelongsToManySetAssociationsMixin<
-        Organization,
-        number
-    >
 
     public static associations: {
         organization: Association<User, Organization>
@@ -106,6 +65,14 @@ class User extends Model {
                 city: {
                     type: DataTypes.STRING,
                     allowNull: false,
+                },
+                hoursToWork: {
+                    type: DataTypes.INTEGER,
+                    allowNull: false,
+                },
+                avatar: {
+                    type: DataTypes.STRING,
+                    allowNull: true,
                 },
             },
             {

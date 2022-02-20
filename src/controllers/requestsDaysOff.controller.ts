@@ -11,15 +11,13 @@ async function createRequestDayOff(
     start: Date,
     end: Date,
     user: number,
-    dayOffType: number,
-    organization: number
+    dayOffType: number
 ): Promise<any> {
     let requestDayOff = await RequestDayOff.create({
         message: message,
         start: start,
         end: end,
         userId: user,
-        organizationId: organization,
         dayOffTypeId: dayOffType,
         statusRequestId: 3,
     })
@@ -40,7 +38,6 @@ async function updateRequestDayOff(
     start: Date | undefined,
     end: Date | undefined,
     user: number | undefined,
-    organization: number | undefined,
     dayOffType: number | undefined,
     statusRequest: number | undefined
 ): Promise<any> {
@@ -52,9 +49,12 @@ async function updateRequestDayOff(
         start: start !== undefined ? start : requestDayOff.start,
         end: end !== undefined ? end : requestDayOff.end,
         user: user !== undefined ? user : requestDayOff.user,
-        organization: organization !== undefined ? organization : requestDayOff.organization,
-        dayOffType: dayOffType !== undefined ? dayOffType : requestDayOff.dayOffType,
-        statusRequest: statusRequest !== undefined ? statusRequest : requestDayOff.statusRequest,
+        dayOffType:
+            dayOffType !== undefined ? dayOffType : requestDayOff.dayOffType,
+        statusRequest:
+            statusRequest !== undefined
+                ? statusRequest
+                : requestDayOff.statusRequest,
     }
 
     requestDayOff = await requestDayOff.update(requestDayOffUpdated)

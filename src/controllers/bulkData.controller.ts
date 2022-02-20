@@ -10,7 +10,6 @@ import {
     Settings,
     StatusRequest,
     User,
-    User_Organization,
 } from '../database/models'
 import {
     generateBirthday,
@@ -35,7 +34,6 @@ async function bulkData(): Promise<any[]> {
         users(),
         punchIns(),
         requestDayOff(),
-        userToOrganization(),
     ])
 }
 
@@ -145,6 +143,8 @@ async function users(): Promise<any[]> {
             password: encode(faker.internet.password()),
             roleId: roleId,
             managerId: roleId - 1,
+            OrganizationId: randomNumber(1, 5),
+            hoursToWork: randomNumber(4, 8),
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),
             birthday: generateBirthday(),
@@ -160,6 +160,8 @@ async function users(): Promise<any[]> {
         password: encode('123456aA?'),
         roleId: 5,
         managerId: 4,
+        OrganizationId: 1,
+        hoursToWork: randomNumber(4, 8),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         birthday: generateBirthday(),
@@ -187,7 +189,6 @@ async function punchIns(): Promise<any[]> {
                     start: element[0],
                     end: element[1],
                     userId: i,
-                    organizationId: randomNumber(1, 2),
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 })
@@ -216,7 +217,6 @@ async function requestDayOff(): Promise<any[]> {
                 start: dayStart,
                 end: dayEnd,
                 userId: i,
-                organizationId: randomNumber(1, 2),
                 dayOffTypeId: randomNumber(1, 5),
                 statusRequestId:
                     randomDay > 0 ? randomNumber(1, 3) : randomNumber(1, 2),
@@ -226,37 +226,6 @@ async function requestDayOff(): Promise<any[]> {
         }
     }
     return await RequestDayOff.bulkCreate(requestDaysOffData)
-}
-
-async function userToOrganization(): Promise<any[]> {
-    let insertData = []
-    const users = await User.findAll()
-    const organizations = await Organization.findAll()
-
-    await users.forEach((u) => {
-        insertData.push({
-            hoursToWork: randomNumber(7, 8),
-            UserId: u.id,
-            OrganizationId: 1,
-        })
-    })
-
-    await organizations.forEach((u) => {
-        if (u.id === 1) return
-        insertData.push({
-            hoursToWork: randomNumber(7, 8),
-            UserId: randomNumber(1, 21),
-            OrganizationId: u.id,
-        })
-    })
-
-    insertData.push({
-        hoursToWork: randomNumber(7, 8),
-        UserId: 21,
-        OrganizationId: 2,
-    })
-
-    return User_Organization.bulkCreate(insertData)
 }
 
 export default {

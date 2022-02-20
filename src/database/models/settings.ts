@@ -13,7 +13,7 @@ class Settings extends Model {
     public updatedAt!: Date
 
     // Populated for inclusions
-    public readonly organization: Organization[]
+    public readonly organization: Organization
 
     public static associations: {
         organization: Association<Settings, Organization>

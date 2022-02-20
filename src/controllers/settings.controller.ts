@@ -33,10 +33,16 @@ async function updateSettings(
     if (settings === null) return 404
 
     const configUpdated = {
-        marginHours: marginHours !== undefined ? marginHours : settings.marginHours,
-        allowModifyPunchIn: allowModifyPunchIn !== undefined ? allowModifyPunchIn : settings.allowModifyPunchIn,
+        marginHours:
+            marginHours !== undefined ? marginHours : settings.marginHours,
+        allowModifyPunchIn:
+            allowModifyPunchIn !== undefined
+                ? allowModifyPunchIn
+                : settings.allowModifyPunchIn,
         allowInsertPastPunchIn:
-            allowInsertPastPunchIn !== undefined ? allowInsertPastPunchIn : settings.allowInsertPastPunchIn,
+            allowInsertPastPunchIn !== undefined
+                ? allowInsertPastPunchIn
+                : settings.allowInsertPastPunchIn,
     }
 
     settings = await settings.update(configUpdated)

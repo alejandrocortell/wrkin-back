@@ -4,6 +4,7 @@ const val = require('../utils/validators')
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
 const sameUser = require('../middlewares/sameUser')
+const uploadAvatar = require('../middlewares/uploadAvatar')
 const router = Router()
 
 router
@@ -169,6 +170,35 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
+
+router
+    .route('/:id(\\d+)/upload-avatar')
+    .post(
+        auth,
+        uploadAvatar,
+        role(['admin', 'manager', 'rrhh', 'coordinator', 'employee']),
+        sameUser,
+        (req, res, next) => {
+            const avatar = req.file
+            const user = parseInt(req.params.id)
+
+            avatar !== undefined &&
+                res.status(204).send({ message: 'Invalid avatar' })
+            !val.isNumber(user) &&
+                res.status(400).send({ message: 'Invalid user' })
+
+            controller
+                .updateAvatar(user, req.file.path)
+                .then((res) => {
+                    res.status(200).send({
+                        message: 'updated',
+                        user: 'user',
+                    })
+                })
+                .catch(() => res.status(404).send())
+                .finally(next)
+        }
+    )
 
 router
     .route('/:id(\\d+)/punchins')

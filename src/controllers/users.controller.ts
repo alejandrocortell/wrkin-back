@@ -4,7 +4,6 @@ import {
     User,
     Document,
     Organization,
-    User_Organization,
 } from '../database/models'
 
 async function getUsers(): Promise<any[]> {
@@ -42,31 +41,7 @@ async function getUser(id: number): Promise<any> {
     const user = await User.findByPk(id)
     if (user === null) return 404
 
-    const userOrganization = await User_Organization.findAll({
-        where: {
-            UserId: id,
-        },
-    })
-
-    const organizations = await Organization.findAll()
-
-    const orgs = userOrganization.map((o) => {
-        return {
-            // @ts-ignore
-            organizationId: o.OrganizationId,
-            organizationName: organizations.find(
-                // @ts-ignore
-                (f) => f.id === o.OrganizationId
-            ).name,
-            // @ts-ignore
-            hoursToWork: o.hoursToWork,
-        }
-    })
-
-    console.log(orgs)
-
-    const response = { ...user.get(), organizations: orgs }
-    return response
+    return user
 }
 
 async function updateUser(
@@ -92,6 +67,19 @@ async function updateUser(
         address: address !== undefined ? address : foundUser.address,
         zipcode: zipcode !== undefined ? zipcode : foundUser.zipcode,
         city: city !== undefined ? city : foundUser.city,
+    }
+
+    foundUser = await foundUser.update(userUpdated)
+    if (foundUser === null) return 404
+    return foundUser
+}
+
+async function updateAvatar(id: number, avatar: string): Promise<any> {
+    let foundUser = await User.findByPk(id)
+    if (foundUser === null) return 404
+
+    const userUpdated = {
+        avatar: avatar,
     }
 
     foundUser = await foundUser.update(userUpdated)
@@ -154,6 +142,7 @@ export default {
     createUser,
     getUser,
     updateUser,
+    updateAvatar,
     deleteUser,
     getPunchIns,
     getDaysOff,

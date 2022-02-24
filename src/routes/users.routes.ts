@@ -6,6 +6,7 @@ const role = require('../middlewares/rolePermission')
 const sameUser = require('../middlewares/sameUser')
 const uploadAvatar = require('../middlewares/uploadAvatar')
 const router = Router()
+const path = require('path')
 
 router
     .route('/')
@@ -182,23 +183,29 @@ router
             const avatar = req.file
             const user = parseInt(req.params.id)
 
-            avatar !== undefined &&
+            avatar === undefined &&
                 res.status(204).send({ message: 'Invalid avatar' })
             !val.isNumber(user) &&
                 res.status(400).send({ message: 'Invalid user' })
 
             controller
-                .updateAvatar(user, req.file.path)
-                .then((res) => {
+                .updateAvatar(user, req.file.filename)
+                .then((user) => {
                     res.status(200).send({
                         message: 'updated',
-                        user: 'user',
+                        user: user,
                     })
                 })
                 .catch(() => res.status(404).send())
                 .finally(next)
         }
     )
+
+router.get('/avatar/:path', (req, res) => {
+    res.sendFile(
+        path.join(__dirname, `../../uploads/avatar/${req.params.path}`)
+    )
+})
 
 router
     .route('/:id(\\d+)/punchins')

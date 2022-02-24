@@ -8,6 +8,9 @@ let storage = multer.diskStorage({
         fs.mkdirSync(path, { recursive: true })
         cb(null, path)
     },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    },
 })
 
 let uploadFile = multer({

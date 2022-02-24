@@ -34,9 +34,15 @@ class User extends Model {
     public static initialize(sequelize: Sequelize) {
         this.init(
             {
+                id: {
+                    type: DataTypes.INTEGER,
+                    autoIncrement: true,
+                    primaryKey: true,
+                },
                 user: {
                     type: DataTypes.STRING,
                     allowNull: false,
+                    primaryKey: true,
                 },
                 password: {
                     type: DataTypes.STRING,

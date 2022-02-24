@@ -5,6 +5,7 @@ import {
     Document,
     Organization,
 } from '../database/models'
+import { encode } from '../utils/cryptoJS'
 
 async function getUsers(): Promise<any[]> {
     return await User.findAll({
@@ -25,7 +26,7 @@ async function createUser(
 ): Promise<any> {
     let newUser = await User.create({
         user: user,
-        password: password,
+        password: encode(password),
         firstName: firstName,
         lastName: lastName,
         birthday: birthday,
@@ -60,7 +61,8 @@ async function updateUser(
 
     const userUpdated = {
         user: user !== undefined ? user : foundUser.user,
-        password: password !== undefined ? password : foundUser.password,
+        password:
+            password !== undefined ? encode(password) : foundUser.password,
         firstName: firstName !== undefined ? firstName : foundUser.firstName,
         lastName: lastName !== undefined ? lastName : foundUser.lastName,
         birthday: birthday !== undefined ? birthday : foundUser.birthday,

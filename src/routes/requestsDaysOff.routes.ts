@@ -74,7 +74,7 @@ router
             const start = req.body.start
             const end = req.body.end
             const dayOffType = req.body.dayOffType
-            const statusRequest = req.body.statusRequest
+            const statusRequestId = req.body.statusRequestId
             const organization = req.body.organization
 
             message !== undefined &&
@@ -89,8 +89,8 @@ router
             dayOffType !== undefined &&
                 !val.isNumber(dayOffType) &&
                 res.status(400).send({ message: 'Invalid dayOffType' })
-            statusRequest !== undefined &&
-                !val.isNumber(statusRequest) &&
+            statusRequestId !== undefined &&
+                !val.isNumber(statusRequestId) &&
                 res.status(400).send({ message: 'Invalid statusRequest' })
             organization !== undefined &&
                 !val.isNumber(organization) &&
@@ -104,7 +104,7 @@ router
                     end ? end : undefined,
                     req.decoded.id,
                     dayOffType ? dayOffType : undefined,
-                    statusRequest ? statusRequest : undefined
+                    statusRequestId ? statusRequestId : undefined
                 )
                 .then((requestDayOff) => {
                     requestDayOff === 404 &&

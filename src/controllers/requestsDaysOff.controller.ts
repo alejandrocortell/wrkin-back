@@ -39,7 +39,7 @@ async function updateRequestDayOff(
     end: Date | undefined,
     user: number | undefined,
     dayOffType: number | undefined,
-    statusRequest: number | undefined
+    statusRequestId: number | undefined
 ): Promise<any> {
     let requestDayOff = await RequestDayOff.findByPk(id)
     if (requestDayOff === null) return 404
@@ -51,9 +51,9 @@ async function updateRequestDayOff(
         user: user !== undefined ? user : requestDayOff.user,
         dayOffType:
             dayOffType !== undefined ? dayOffType : requestDayOff.dayOffType,
-        statusRequest:
-            statusRequest !== undefined
-                ? statusRequest
+        statusRequestId:
+            statusRequestId !== undefined
+                ? statusRequestId
                 : requestDayOff.statusRequest,
     }
 

@@ -3,7 +3,7 @@ import controllerUser from '../controllers/users.controller'
 const sameUser = async (req, res, next) => {
     const user = await controllerUser.getUser(req.decoded.id)
     const id = parseInt(req.params.id)
-    const allowRoles = [1, 2, 3]
+    const allowRoles = [1, 2, 3, 4]
 
     if (allowRoles.includes(user.roleId)) {
         next()

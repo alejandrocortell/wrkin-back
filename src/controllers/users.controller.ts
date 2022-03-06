@@ -21,8 +21,11 @@ async function createUser(
     birthday: string,
     address: string,
     zipcode: string,
-    city: string
-    // hoursToWork: number
+    city: string,
+    role: number,
+    manager: number,
+    organization: number,
+    hoursToWork: number
 ): Promise<any> {
     let newUser = await User.create({
         user: user,
@@ -33,6 +36,10 @@ async function createUser(
         address: address,
         zipcode: zipcode,
         city: city,
+        roleId: role,
+        managerId: manager,
+        OrganizationId: organization,
+        hoursToWork: hoursToWork,
     })
 
     return newUser

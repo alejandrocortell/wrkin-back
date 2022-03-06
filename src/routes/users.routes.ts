@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import controller from '../controllers/users.controller'
+import { Organization, Role, User } from '../database/models'
 const val = require('../utils/validators')
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
@@ -23,7 +24,7 @@ router
     .post(
         auth,
         role(['admin', 'manager', 'rrhh', 'coordinator']),
-        (req, res, next) => {
+        async (req, res, next) => {
             const user = req.body.user
             const password = req.body.password
             const firstName = req.body.firstName
@@ -32,6 +33,10 @@ router
             const address = req.body.address
             const zipcode = req.body.zipcode
             const city = req.body.city
+            const role = req.body.role
+            const manager = req.body.manager
+            const organization = req.body.organization
+            const hoursToWork = req.body.hoursToWork
 
             !val.isString(user) &&
                 res.status(400).send({ message: 'Invalid message' })
@@ -49,6 +54,27 @@ router
                 res.status(400).send({ message: 'Invalid zipcode' })
             !val.isString(city) &&
                 res.status(400).send({ message: 'Invalid city' })
+            !val.isNumber(role) &&
+                res.status(400).send({ message: 'Invalid role' })
+            !val.isNumber(manager) &&
+                res.status(400).send({ message: 'Invalid manager' })
+            !val.isNumber(organization) &&
+                res.status(400).send({ message: 'Invalid organization' })
+            !val.isNumber(hoursToWork) &&
+                res.status(400).send({ message: 'Invalid hours to work' })
+
+            const foundRole = await Role.findByPk(parseInt(role))
+            const foundManager = await User.findByPk(parseInt(manager))
+            const foundOrganization = await Organization.findByPk(
+                parseInt(organization)
+            )
+
+            foundRole === undefined &&
+                res.status(400).send({ message: 'Invalid role' })
+            foundManager === undefined &&
+                res.status(400).send({ message: 'Invalid manager' })
+            foundOrganization === undefined &&
+                res.status(400).send({ message: 'Invalid manager' })
 
             controller
                 .createUser(
@@ -59,7 +85,11 @@ router
                     birthday,
                     address,
                     zipcode,
-                    city
+                    city,
+                    role,
+                    manager,
+                    organization,
+                    hoursToWork
                 )
                 .then((user) =>
                     res

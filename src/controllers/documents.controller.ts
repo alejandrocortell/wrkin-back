@@ -11,16 +11,17 @@ async function createDocument(
     nameServer: string,
     path: string,
     organization: number,
-    user: number,
+    user: number | undefined,
     documentType: number
 ): Promise<any> {
+    console.log('hereee')
     let document = await Document.create({
         name: name,
         nameServer: nameServer,
         path: path,
-        organizationId: organization,
-        userId: user,
-        documentTypeId: documentType,
+        organizationId: +organization,
+        ...(user && { userId: +user }),
+        documentTypeId: +documentType,
     })
 
     return document

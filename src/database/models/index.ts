@@ -62,7 +62,7 @@ Document.belongsTo(DocumentType, {
 })
 Document.belongsTo(User, {
     as: 'user',
-    foreignKey: { allowNull: false },
+    foreignKey: { allowNull: true },
     onDelete: 'CASCADE',
 })
 RequestDayOff.belongsTo(DayOffType, {

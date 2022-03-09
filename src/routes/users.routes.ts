@@ -191,16 +191,21 @@ router
                 .finally(next)
         }
     )
-    .delete(auth, role(['admin', 'manager', 'rrhh']), (req, res, next) => {
-        controller
-            .deleteUser(parseInt(req.params.id))
-            .then((user) => {
-                user === 404 && res.status(404).send({ message: 'Not found' })
-                res.status(200).send()
-            })
-            .catch(() => res.status(404).send())
-            .finally(next)
-    })
+    .delete(
+        auth,
+        role(['admin', 'manager', 'rrhh', 'coordinator']),
+        (req, res, next) => {
+            controller
+                .deleteUser(parseInt(req.params.id))
+                .then((user) => {
+                    user === 404 &&
+                        res.status(404).send({ message: 'Not found' })
+                    res.status(200).send()
+                })
+                .catch(() => res.status(404).send())
+                .finally(next)
+        }
+    )
 
 router
     .route('/:id(\\d+)/upload-avatar')

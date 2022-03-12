@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import {
     PunchIn,
     RequestDayOff,
@@ -134,15 +135,9 @@ async function getDaysOff(id: number): Promise<RequestDayOff[]> {
 
 async function getDocuments(id: number): Promise<Document[]> {
     return await Document.findAll({
-        include: [
-            {
-                model: User,
-                as: 'user',
-                where: { id: id },
-                required: true,
-                attributes: [],
-            },
-        ],
+        where: {
+            [Op.or]: [{ userId: id }, { userId: null }],
+        },
     })
 }
 

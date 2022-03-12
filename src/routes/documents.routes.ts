@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import controller from '../controllers/documents.controller'
 const val = require('../utils/validators')
-const fs = require('fs')
+const fs = require('fs').promises
 const upload = require('./../middlewares/upload')
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
@@ -70,24 +70,18 @@ router
         })
     })
     .delete(auth, async (req, res, next) => {
-        const { nameServer } = await controller.getDocument(
-            parseInt(req.params.id)
-        )
+        const { path } = await controller.getDocument(parseInt(req.params.id))
 
+        if (path === undefined) {
+            res.status(400).send({ message: 'Invalid document' })
+        }
         controller
             .deleteDocument(parseInt(req.params.id))
-            .then(() => {
-                const path = `./uploads/${nameServer}`
-                fs.unlink(path, (err) => {
-                    if (err) {
-                        res.status(204).send({
-                            message: 'Could not delete the file. ' + err,
-                        })
-                    }
-                })
-                res.status(200).send()
+            .then((response) => {
+                fs.unlink(path)
+                res.status(200).send({ message: 'Deleted' })
             })
-            .catch(() => res.status(404).send())
+            .catch((error) => res.status(404).send({ message: error }))
             .finally(next)
     })
 

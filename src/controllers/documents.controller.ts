@@ -14,7 +14,6 @@ async function createDocument(
     user: number | undefined,
     documentType: number
 ): Promise<any> {
-    console.log('hereee')
     let document = await Document.create({
         name: name,
         nameServer: nameServer,

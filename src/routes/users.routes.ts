@@ -21,85 +21,79 @@ router
                 .finally(next)
         }
     )
-    .post(
-        auth,
-        role(['admin', 'manager', 'rrhh', 'coordinator']),
-        async (req, res, next) => {
-            const user = req.body.user
-            const password = req.body.password
-            const firstName = req.body.firstName
-            const lastName = req.body.lastName
-            const birthday = req.body.birthday
-            const address = req.body.address
-            const zipcode = req.body.zipcode
-            const city = req.body.city
-            const role = req.body.role
-            const manager = req.body.manager
-            const organization = req.body.organization
-            const hoursToWork = req.body.hoursToWork
+    .post(auth, role(['admin', 'manager', 'rrhh']), async (req, res, next) => {
+        const user = req.body.user
+        const password = req.body.password
+        const firstName = req.body.firstName
+        const lastName = req.body.lastName
+        const birthday = req.body.birthday
+        const address = req.body.address
+        const zipcode = req.body.zipcode
+        const city = req.body.city
+        const role = req.body.role
+        const manager = req.body.manager
+        const organization = req.body.organization
+        const hoursToWork = req.body.hoursToWork
 
-            !val.isString(user) &&
-                res.status(400).send({ message: 'Invalid message' })
-            !val.isString(password) &&
-                res.status(400).send({ message: 'Invalid password' })
-            !val.isString(firstName) &&
-                res.status(400).send({ message: 'Invalid firstName' })
-            !val.isString(lastName) &&
-                res.status(400).send({ message: 'Invalid lastName' })
-            !val.isDate(birthday) &&
-                res.status(400).send({ message: 'Invalid birthday' })
-            !val.isString(address) &&
-                res.status(400).send({ message: 'Invalid address' })
-            !val.isString(zipcode) &&
-                res.status(400).send({ message: 'Invalid zipcode' })
-            !val.isString(city) &&
-                res.status(400).send({ message: 'Invalid city' })
-            !val.isNumber(role) &&
-                res.status(400).send({ message: 'Invalid role' })
-            !val.isNumber(manager) &&
-                res.status(400).send({ message: 'Invalid manager' })
-            !val.isNumber(organization) &&
-                res.status(400).send({ message: 'Invalid organization' })
-            !val.isNumber(hoursToWork) &&
-                res.status(400).send({ message: 'Invalid hours to work' })
+        !val.isString(user) &&
+            res.status(400).send({ message: 'Invalid message' })
+        !val.isString(password) &&
+            res.status(400).send({ message: 'Invalid password' })
+        !val.isString(firstName) &&
+            res.status(400).send({ message: 'Invalid firstName' })
+        !val.isString(lastName) &&
+            res.status(400).send({ message: 'Invalid lastName' })
+        !val.isDate(birthday) &&
+            res.status(400).send({ message: 'Invalid birthday' })
+        !val.isString(address) &&
+            res.status(400).send({ message: 'Invalid address' })
+        !val.isString(zipcode) &&
+            res.status(400).send({ message: 'Invalid zipcode' })
+        !val.isString(city) && res.status(400).send({ message: 'Invalid city' })
+        !val.isNumber(role) && res.status(400).send({ message: 'Invalid role' })
+        !val.isNumber(manager) &&
+            res.status(400).send({ message: 'Invalid manager' })
+        !val.isNumber(organization) &&
+            res.status(400).send({ message: 'Invalid organization' })
+        !val.isNumber(hoursToWork) &&
+            res.status(400).send({ message: 'Invalid hours to work' })
 
-            const foundRole = await Role.findByPk(parseInt(role))
-            const foundManager = await User.findByPk(parseInt(manager))
-            const foundOrganization = await Organization.findByPk(
-                parseInt(organization)
+        const foundRole = await Role.findByPk(parseInt(role))
+        const foundManager = await User.findByPk(parseInt(manager))
+        const foundOrganization = await Organization.findByPk(
+            parseInt(organization)
+        )
+
+        foundRole === undefined &&
+            res.status(400).send({ message: 'Invalid role' })
+        foundManager === undefined &&
+            res.status(400).send({ message: 'Invalid manager' })
+        foundOrganization === undefined &&
+            res.status(400).send({ message: 'Invalid manager' })
+
+        controller
+            .createUser(
+                user,
+                password,
+                firstName,
+                lastName,
+                birthday,
+                address,
+                zipcode,
+                city,
+                role,
+                manager,
+                organization,
+                hoursToWork
             )
-
-            foundRole === undefined &&
-                res.status(400).send({ message: 'Invalid role' })
-            foundManager === undefined &&
-                res.status(400).send({ message: 'Invalid manager' })
-            foundOrganization === undefined &&
-                res.status(400).send({ message: 'Invalid manager' })
-
-            controller
-                .createUser(
-                    user,
-                    password,
-                    firstName,
-                    lastName,
-                    birthday,
-                    address,
-                    zipcode,
-                    city,
-                    role,
-                    manager,
-                    organization,
-                    hoursToWork
-                )
-                .then((user) =>
-                    res
-                        .location(req.baseUrl + '/' + String(user.id))
-                        .status(201)
-                        .send({ message: 'Created', user: user })
-                )
-                .finally(next)
-        }
-    )
+            .then((user) =>
+                res
+                    .location(req.baseUrl + '/' + String(user.id))
+                    .status(201)
+                    .send({ message: 'Created', user: user })
+            )
+            .finally(next)
+    })
 
 router.route('/me').get(auth, (req, res, next) => {
     controller

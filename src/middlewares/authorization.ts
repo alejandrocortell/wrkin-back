@@ -4,10 +4,11 @@ const jwt = require('jsonwebtoken')
 const auth = (req, res, next) => {
     const authHeader = req.headers.authorization
 
-    if (!authHeader) {
+    if (!authHeader || authHeader === undefined) {
         res.status(404).send({
             message: 'Token not found',
         })
+        return
     }
     const token = authHeader.split(' ')[1]
     const key = req.app.get('key')

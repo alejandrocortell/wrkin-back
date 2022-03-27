@@ -12,7 +12,7 @@ async function getToken(req, res): Promise<void> {
     })
 
     if (user.length !== 1 || decode(user[0].password) !== req.body.password) {
-        return res.json({ message: 'User or password incorrects', status: 204 })
+        return res.status(204).json({ message: 'User or password incorrects' })
     } else {
         const key = req.app.get('key')
         const payload = {

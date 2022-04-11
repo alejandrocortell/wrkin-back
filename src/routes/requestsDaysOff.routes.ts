@@ -75,7 +75,6 @@ router
             const end = req.body.end
             const dayOffType = req.body.dayOffType
             const statusRequestId = req.body.statusRequestId
-            const organization = req.body.organization
 
             message !== undefined &&
                 !val.isString(message) &&
@@ -92,9 +91,6 @@ router
             statusRequestId !== undefined &&
                 !val.isNumber(statusRequestId) &&
                 res.status(400).send({ message: 'Invalid statusRequest' })
-            organization !== undefined &&
-                !val.isNumber(organization) &&
-                res.status(400).send({ message: 'Invalid organization' })
 
             controller
                 .updateRequestDayOff(
@@ -124,7 +120,7 @@ router
             .then((requestDayOff) => {
                 requestDayOff === 404 &&
                     res.status(404).send({ message: 'Not found' })
-                res.status(200).send({ message: 'Deleted' })
+                res.status(200).send()
             })
             .catch(() => res.status(404).send())
             .finally(next)

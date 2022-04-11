@@ -36,24 +36,10 @@ async function deleteOrganization(id: number): Promise<any> {
     return deleted
 }
 
-async function getUsers(id: number): Promise<User[]> {
-    return await User.findAll({
-        include: [
-            {
-                model: Organization,
-                where: { id: id },
-                required: true,
-                attributes: [],
-            },
-        ],
-    })
-}
-
 export default {
     getOrganizations,
     createOrganization,
     getOrganization,
     updateOrganization,
     deleteOrganization,
-    getUsers,
 }

@@ -50,7 +50,7 @@ router
             .updateRole(parseInt(req.params.id), name)
             .then((role) => {
                 role === 404 && res.status(404).send({ message: 'Not found' })
-                res.status(200).send({ message: 'Updated', role: role })
+                res.status(201).send({ message: 'Updated', role: role })
             })
             .catch(() => res.status(404).send())
             .finally(next)

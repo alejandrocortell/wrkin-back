@@ -50,7 +50,7 @@ router
             .updateStatusRequest(parseInt(req.params.id), statusRequest)
             .then((statusRequest) => {
                 statusRequest === 404 && res.status(404).send({ message: 'Not found' })
-                res.status(200).send({ message: 'Updated', statusRequest: statusRequest })
+                res.status(201).send({ message: 'Updated', statusRequest: statusRequest })
             })
             .catch(() => res.status(404).send())
             .finally(next)

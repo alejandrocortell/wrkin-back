@@ -55,20 +55,20 @@ async function getUser(id: number): Promise<any> {
 
 async function updateUser(
     id: number,
-    user: string | undefined,
     password: string | undefined,
     firstName: string | undefined,
     lastName: string | undefined,
     birthday: string | undefined,
     address: string | undefined,
     zipcode: string | undefined,
-    city: string | undefined
+    city: string | undefined,
+    role: number | undefined,
+    manager: number | undefined
 ): Promise<any> {
     let foundUser = await User.findByPk(id)
     if (foundUser === null) return 404
 
     const userUpdated = {
-        user: user !== undefined ? user : foundUser.user,
         password:
             password !== undefined ? encode(password) : foundUser.password,
         firstName: firstName !== undefined ? firstName : foundUser.firstName,
@@ -77,7 +77,12 @@ async function updateUser(
         address: address !== undefined ? address : foundUser.address,
         zipcode: zipcode !== undefined ? zipcode : foundUser.zipcode,
         city: city !== undefined ? city : foundUser.city,
+        roleId: role !== undefined ? role : foundUser.role,
+        managerId: manager !== undefined ? manager : foundUser.manager,
     }
+
+    console.log('------------------------')
+    console.log(userUpdated)
 
     foundUser = await foundUser.update(userUpdated)
     if (foundUser === null) return 404

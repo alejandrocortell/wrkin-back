@@ -3,7 +3,6 @@ import controller from '../controllers/organizations.controller'
 const val = require('../utils/validators')
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
-const sameOrganization = require('../middlewares/sameOrganization')
 const router = Router()
 
 router
@@ -43,7 +42,7 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, role(['admin', 'manager']), sameOrganization, (req, res, next) => {
+    .put(auth, role(['admin', 'manager']), (req, res, next) => {
         const name = req.body.name
 
         name !== undefined && !val.isString(name) && res.status(400).send({ message: 'Invalid name' })
@@ -52,7 +51,7 @@ router
             .updateOrganization(parseInt(req.params.id), name)
             .then((organization) => {
                 organization === 404 && res.status(404).send({ message: 'Not found' })
-                res.status(200).send({ message: 'Updated', organization: organization })
+                res.status(201).send({ message: 'Updated', organization: organization })
             })
             .catch(() => res.status(404).send())
             .finally(next)
@@ -63,18 +62,6 @@ router
             .then((organization) => {
                 organization === 404 && res.status(404).send({ message: 'Not found' })
                 res.status(200).send({ message: 'Deleted' })
-            })
-            .catch(() => res.status(404).send())
-            .finally(next)
-    })
-
-router
-    .route('/:id(\\d+)/users')
-    .get(auth, role(['admin', 'manager', 'rrhh', 'coordinator']), sameOrganization, (req, res, next) => {
-        controller
-            .getUsers(parseInt(req.params.id))
-            .then((users) => {
-                res.status(200).send(users)
             })
             .catch(() => res.status(404).send())
             .finally(next)

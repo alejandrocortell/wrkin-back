@@ -79,7 +79,7 @@ router
             .deleteDocument(parseInt(req.params.id))
             .then((response) => {
                 fs.unlink(path)
-                res.status(200).send({ message: 'Deleted' })
+                res.status(200).send()
             })
             .catch((error) => res.status(404).send({ message: error }))
             .finally(next)

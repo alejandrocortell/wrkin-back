@@ -35,8 +35,7 @@ router
         const organization = req.body.organization
         const hoursToWork = req.body.hoursToWork
 
-        !val.isString(user) &&
-            res.status(400).send({ message: 'Invalid message' })
+        !val.isString(user) && res.status(400).send({ message: 'Invalid user' })
         !val.isString(password) &&
             res.status(400).send({ message: 'Invalid password' })
         !val.isString(firstName) &&
@@ -129,8 +128,7 @@ router
         auth,
         role(['admin', 'manager', 'rrhh', 'employee']),
         sameUser,
-        (req, res, next) => {
-            const user = req.body.user
+        async (req, res, next) => {
             const password = req.body.password
             const firstName = req.body.firstName
             const lastName = req.body.lastName
@@ -138,10 +136,9 @@ router
             const address = req.body.address
             const zipcode = req.body.zipcode
             const city = req.body.city
+            const role = req.body.role
+            const manager = req.body.manager
 
-            user !== undefined &&
-                !val.isString(user) &&
-                res.status(400).send({ message: 'Invalid message' })
             password !== undefined &&
                 !val.isString(password) &&
                 res.status(400).send({ message: 'Invalid password' })
@@ -157,24 +154,33 @@ router
             address !== undefined &&
                 !val.isString(address) &&
                 res.status(400).send({ message: 'Invalid address' })
-            city !== undefined &&
+            zipcode !== undefined &&
                 !val.isString(zipcode) &&
                 res.status(400).send({ message: 'Invalid zipcode' })
             city !== undefined &&
                 !val.isString(city) &&
                 res.status(400).send({ message: 'Invalid city' })
 
+            const foundRole = await Role.findByPk(parseInt(role))
+            const foundManager = await User.findByPk(parseInt(manager))
+
+            foundRole === undefined &&
+                res.status(400).send({ message: 'Invalid role' })
+            foundManager === undefined &&
+                res.status(400).send({ message: 'Invalid manager' })
+
             controller
                 .updateUser(
                     parseInt(req.params.id),
-                    user ? user : undefined,
                     password ? password : undefined,
                     firstName ? firstName : undefined,
                     lastName ? lastName : undefined,
                     birthday ? birthday : undefined,
                     address ? address : undefined,
                     zipcode ? zipcode : undefined,
-                    city ? city : undefined
+                    city ? city : undefined,
+                    role ? role : undefined,
+                    manager ? manager : undefined
                 )
                 .then((user) => {
                     user === 404 &&

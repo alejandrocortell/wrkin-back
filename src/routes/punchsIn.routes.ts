@@ -55,7 +55,6 @@ router
     .put(auth, createdBy, (req: IExtendRequest, res, next) => {
         const start = req.body.start
         const end = req.body.end
-        const organization = req.body.organization
 
         start !== undefined &&
             !val.isDate(start) &&
@@ -63,9 +62,6 @@ router
         end !== undefined &&
             !val.isDate(end) &&
             res.status(400).send({ message: 'Invalid end' })
-        organization !== undefined &&
-            !val.isNumber(organization) &&
-            res.status(400).send({ message: 'Invalid organization' })
 
         controller
             .updatePunchIn(

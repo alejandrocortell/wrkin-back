@@ -50,7 +50,7 @@ router
             .updateDocumentType(parseInt(req.params.id), name)
             .then((documentType) => {
                 documentType === 404 && res.status(404).send({ message: 'Not found' })
-                res.status(200).send({ message: 'Updated', documentType: documentType })
+                res.status(201).send({ message: 'Updated', documentType: documentType })
             })
             .catch(() => res.status(404).send())
             .finally(next)

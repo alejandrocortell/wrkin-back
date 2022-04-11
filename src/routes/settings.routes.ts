@@ -3,7 +3,6 @@ import controller from '../controllers/settings.controller'
 const val = require('../utils/validators')
 const auth = require('../middlewares/authorization')
 const role = require('../middlewares/rolePermission')
-const sameOrganization = require('../middlewares/sameOrganization')
 
 const router = Router()
 
@@ -31,7 +30,7 @@ router.route('/').post(auth, role(['admin']), (req, res, next) => {
 
 router
     .route('/:id(\\d+)')
-    .get(auth, sameOrganization, (req, res, next) => {
+    .get(auth, (req, res, next) => {
         controller
             .getSettings(parseInt(req.params.id))
             .then((settings) => {
@@ -41,7 +40,7 @@ router
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, role(['admin', 'manager', 'rrhh']), sameOrganization, (req, res, next) => {
+    .put(auth, role(['admin', 'manager', 'rrhh']), (req, res, next) => {
         const marginHours = req.body.marginHours
         const allowModifyPunchIn = req.body.allowModifyPunchIn
         const allowInsertPastPunchIn = req.body.allowInsertPastPunchIn
@@ -75,7 +74,7 @@ router
             .deleteSettings(parseInt(req.params.id))
             .then((settings) => {
                 settings === 404 && res.status(404).send({ message: 'Not found' })
-                res.status(200).send({ message: 'Deleted' })
+                res.status(200).send()
             })
             .catch(() => res.status(404).send())
             .finally(next)

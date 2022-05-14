@@ -81,9 +81,6 @@ async function updateUser(
         managerId: manager !== undefined ? manager : foundUser.manager,
     }
 
-    console.log('------------------------')
-    console.log(userUpdated)
-
     foundUser = await foundUser.update(userUpdated)
     if (foundUser === null) return 404
     return foundUser

@@ -2,6 +2,7 @@ const { Router } = require('express')
 
 import authRoutes from './auth.routes'
 import bulkDataRoutes from './bulkData.routes'
+import initRoutes from './init.routes'
 import daysOffTypesRoutes from './daysOffTypes.routes'
 import documentsRoutes from './documents.routes'
 import documentsTypesRoutes from './documentsTypes.routes'
@@ -17,6 +18,7 @@ const router = Router()
 
 router.use('/auth', authRoutes)
 router.use('/bulk-data', bulkDataRoutes)
+router.use('/init', initRoutes)
 router.use('/days-off-types', daysOffTypesRoutes)
 router.use('/requests-days-off', requestsDaysOffRoutes)
 router.use('/status-requests', statusRequesRoutes)

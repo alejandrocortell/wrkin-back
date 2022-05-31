@@ -12,13 +12,22 @@ router.route('/').post(auth, role(['admin']), (req, res, next) => {
     const allowInsertPastPunchIn = req.body.allowInsertPastPunchIn
     const organizationId = req.body.organizationId
 
-    !val.isDate(marginHours) && res.status(400).send({ message: 'Invalid marginHours' })
-    !val.isBoolean(allowModifyPunchIn) && res.status(400).send({ message: 'Invalid allowModifyPunchIn' })
-    !val.isBoolean(allowInsertPastPunchIn) && res.status(400).send({ message: 'Invalid allowInsertPastPunchIn' })
-    !val.isNumber(organizationId) && res.status(400).send({ message: 'Invalid organizationId' })
+    !val.number(marginHours) &&
+        res.status(400).send({ message: 'Invalid marginHours' })
+    !val.isBoolean(allowModifyPunchIn) &&
+        res.status(400).send({ message: 'Invalid allowModifyPunchIn' })
+    !val.isBoolean(allowInsertPastPunchIn) &&
+        res.status(400).send({ message: 'Invalid allowInsertPastPunchIn' })
+    !val.isNumber(organizationId) &&
+        res.status(400).send({ message: 'Invalid organizationId' })
 
     controller
-        .createSettings(marginHours, allowModifyPunchIn, allowInsertPastPunchIn, organizationId)
+        .createSettings(
+            marginHours,
+            allowModifyPunchIn,
+            allowInsertPastPunchIn,
+            organizationId
+        )
         .then((settings) =>
             res
                 .location(req.baseUrl + '/' + String(settings.id))
@@ -34,19 +43,20 @@ router
         controller
             .getSettings(parseInt(req.params.id))
             .then((settings) => {
-                settings === 404 && res.status(404).send({ message: 'Not found' })
+                settings === 404 &&
+                    res.status(404).send({ message: 'Not found' })
                 res.status(200).send({ message: 'Found', settings: settings })
             })
             .catch(() => res.status(404).send())
             .finally(next)
     })
-    .put(auth, role(['admin', 'manager', 'rrhh']), (req, res, next) => {
+    .put(auth, role(['admin', 'manager']), (req, res, next) => {
         const marginHours = req.body.marginHours
         const allowModifyPunchIn = req.body.allowModifyPunchIn
         const allowInsertPastPunchIn = req.body.allowInsertPastPunchIn
 
         marginHours !== undefined &&
-            !val.isDate(marginHours) &&
+            !val.isNumber(marginHours) &&
             res.status(400).send({ message: 'Invalid marginHours' })
         allowModifyPunchIn !== undefined &&
             !val.isBoolean(allowModifyPunchIn) &&
@@ -59,11 +69,16 @@ router
             .updateSettings(
                 parseInt(req.params.id),
                 marginHours ? marginHours : undefined,
-                allowModifyPunchIn !== undefined ? allowModifyPunchIn : undefined,
-                allowInsertPastPunchIn !== undefined ? allowInsertPastPunchIn : undefined
+                allowModifyPunchIn !== undefined
+                    ? allowModifyPunchIn
+                    : undefined,
+                allowInsertPastPunchIn !== undefined
+                    ? allowInsertPastPunchIn
+                    : undefined
             )
             .then((settings) => {
-                settings === 404 && res.status(404).send({ message: 'Not found' })
+                settings === 404 &&
+                    res.status(404).send({ message: 'Not found' })
                 res.status(200).send({ message: 'Updated', settings: settings })
             })
             .catch(() => res.status(404).send())
@@ -73,7 +88,8 @@ router
         controller
             .deleteSettings(parseInt(req.params.id))
             .then((settings) => {
-                settings === 404 && res.status(404).send({ message: 'Not found' })
+                settings === 404 &&
+                    res.status(404).send({ message: 'Not found' })
                 res.status(200).send()
             })
             .catch(() => res.status(404).send())

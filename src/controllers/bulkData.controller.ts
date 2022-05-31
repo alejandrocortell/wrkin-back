@@ -75,28 +75,24 @@ async function documentsTypes(): Promise<any[]> {
 
 async function organizations(): Promise<any[]> {
     let organizationsData = []
-    for (let index = 0; index < 5; index++) {
-        organizationsData.push({
-            name: faker.company.companyName(),
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        })
-    }
+    organizationsData.push({
+        name: faker.company.companyName(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    })
     return await Organization.bulkCreate(organizationsData)
 }
 
 async function settings(): Promise<any[]> {
     let settingsData = []
-    for (let index = 1; index < 6; index++) {
-        settingsData.push({
-            organizationId: index,
-            marginHours: randomNumber(1, 5),
-            allowModifyPunchIn: true,
-            allowInsertPastPunchIn: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        })
-    }
+    settingsData.push({
+        organizationId: 1,
+        marginHours: randomNumber(1, 5),
+        allowModifyPunchIn: true,
+        allowInsertPastPunchIn: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    })
     return await Settings.bulkCreate(settingsData)
 }
 
@@ -143,7 +139,7 @@ async function users(): Promise<any[]> {
             password: encode(faker.internet.password()),
             roleId: roleId,
             managerId: roleId - 1,
-            OrganizationId: randomNumber(1, 5),
+            OrganizationId: 1,
             hoursToWork: randomNumber(4, 8),
             firstName: faker.name.firstName(),
             lastName: faker.name.lastName(),

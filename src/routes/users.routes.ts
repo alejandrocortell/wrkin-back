@@ -124,73 +124,71 @@ router
                 .finally(next)
         }
     )
-    .put(
-        auth,
-        role(['admin', 'manager', 'rrhh', 'employee']),
-        sameUser,
-        async (req, res, next) => {
-            const password = req.body.password
-            const firstName = req.body.firstName
-            const lastName = req.body.lastName
-            const birthday = req.body.birthday
-            const address = req.body.address
-            const zipcode = req.body.zipcode
-            const city = req.body.city
-            const role = req.body.role
-            const manager = req.body.manager
+    .put(auth, sameUser, async (req, res, next) => {
+        const password = req.body.password
+        const firstName = req.body.firstName
+        const lastName = req.body.lastName
+        const birthday = req.body.birthday
+        const address = req.body.address
+        const zipcode = req.body.zipcode
+        const city = req.body.city
+        const role = req.body.role
+        const manager = req.body.manager
 
-            password !== undefined &&
-                !val.isString(password) &&
-                res.status(400).send({ message: 'Invalid password' })
-            firstName !== undefined &&
-                !val.isString(firstName) &&
-                res.status(400).send({ message: 'Invalid firstName' })
-            lastName !== undefined &&
-                !val.isString(lastName) &&
-                res.status(400).send({ message: 'Invalid lastName' })
-            birthday !== undefined &&
-                !val.isDate(birthday) &&
-                res.status(400).send({ message: 'Invalid birthday' })
-            address !== undefined &&
-                !val.isString(address) &&
-                res.status(400).send({ message: 'Invalid address' })
-            zipcode !== undefined &&
-                !val.isString(zipcode) &&
-                res.status(400).send({ message: 'Invalid zipcode' })
-            city !== undefined &&
-                !val.isString(city) &&
-                res.status(400).send({ message: 'Invalid city' })
+        password !== undefined &&
+            !val.isString(password) &&
+            res.status(400).send({ message: 'Invalid password' })
+        firstName !== undefined &&
+            !val.isString(firstName) &&
+            res.status(400).send({ message: 'Invalid firstName' })
+        lastName !== undefined &&
+            !val.isString(lastName) &&
+            res.status(400).send({ message: 'Invalid lastName' })
+        birthday !== undefined &&
+            !val.isDate(birthday) &&
+            res.status(400).send({ message: 'Invalid birthday' })
+        address !== undefined &&
+            !val.isString(address) &&
+            res.status(400).send({ message: 'Invalid address' })
+        zipcode !== undefined &&
+            !val.isString(zipcode) &&
+            res.status(400).send({ message: 'Invalid zipcode' })
+        city !== undefined &&
+            !val.isString(city) &&
+            res.status(400).send({ message: 'Invalid city' })
 
+        if (role) {
             const foundRole = await Role.findByPk(parseInt(role))
-            const foundManager = await User.findByPk(parseInt(manager))
-
             foundRole === undefined &&
                 res.status(400).send({ message: 'Invalid role' })
+        }
+
+        if (manager) {
+            const foundManager = await User.findByPk(parseInt(manager))
             foundManager === undefined &&
                 res.status(400).send({ message: 'Invalid manager' })
-
-            controller
-                .updateUser(
-                    parseInt(req.params.id),
-                    password ? password : undefined,
-                    firstName ? firstName : undefined,
-                    lastName ? lastName : undefined,
-                    birthday ? birthday : undefined,
-                    address ? address : undefined,
-                    zipcode ? zipcode : undefined,
-                    city ? city : undefined,
-                    role ? role : undefined,
-                    manager ? manager : undefined
-                )
-                .then((user) => {
-                    user === 404 &&
-                        res.status(404).send({ message: 'Not found' })
-                    res.status(201).send({ message: 'Updated', user: user })
-                })
-                .catch(() => res.status(404).send())
-                .finally(next)
         }
-    )
+
+        controller
+            .updateUser(
+                parseInt(req.params.id),
+                password ? password : undefined,
+                firstName ? firstName : undefined,
+                lastName ? lastName : undefined,
+                birthday ? birthday : undefined,
+                address ? address : undefined,
+                zipcode ? zipcode : undefined,
+                city ? city : undefined,
+                role ? role : undefined,
+                manager ? manager : undefined
+            )
+            .then((user) => {
+                user === 404 && res.status(404).send({ message: 'Not found' })
+                res.status(201).send({ message: 'Updated', user: user })
+            })
+            .catch(() => res.status(404).send())
+            .finally(next)
+    })
     .delete(
         auth,
         role(['admin', 'manager', 'rrhh', 'coordinator']),
